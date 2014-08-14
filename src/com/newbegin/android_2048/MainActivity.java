@@ -9,6 +9,7 @@ public class MainActivity extends Activity {
 	public int hello;
 	public int a;
 	
+	public int b;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
