@@ -52,11 +52,7 @@ public class Card extends TextView{
 		return value;
 	}
 	
-	boolean haveBlank;
-	boolean merged;
-	boolean canMove[] = {true,true,true,true};
-	Card[][] card;
-	card = new Card[4][4];
+	
 	
 	//左滑动合并填充函数
 	boolean gameLeft(){		
@@ -107,8 +103,8 @@ public class Card extends TextView{
 		
 		//判断游戏是否结束以及各个方向滑动有没有效果
 		if(merged == false){
-			canMove[2] = false;
 			if(haveBlank == false){
+				canMove[2] = false;
 				canMove[3] = false;
 				if(!vJudge()){
 					return false;

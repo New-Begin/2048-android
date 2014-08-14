@@ -19,6 +19,11 @@ public class GameLayout extends GridLayout {
 
 	/* 存放一组卡片 */
 	private Card[][] cardMap;
+	boolean haveBlank;
+	boolean merged;
+	boolean canMove[] = {true,true,true,true};
+	Card[][] card;
+	card = new Card[4][4];
 
 	// 分数
 	private int score;
