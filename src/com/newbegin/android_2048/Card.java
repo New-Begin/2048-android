@@ -1,3 +1,5 @@
+package com.newbegin.android_2048;
+
 import android.content.Context;
 import android.widget.TextView;
 public class Card extends TextView{
