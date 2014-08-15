@@ -14,6 +14,12 @@ public class Card extends TextView{
 		setBackgroundColor(color[value]);
 	}
 	
+	//初始化
+	public void init(){
+		value = 0;
+		setBackgroundColor(color[value]);
+	}
+	
 	//比较是否相等
 	public boolean isEqual(Card other){
 		if(value == other.getValue())
