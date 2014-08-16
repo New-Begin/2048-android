@@ -7,8 +7,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 
-public class GameManagerActivity extends Activity {
+public class GameManagerActivity extends Activity implements OnTouchListener {
 	
 	private GameLayout gameView; //contain a double dimensional array gameView numArray;
 	private ControlLayout controlPanel;
@@ -30,36 +33,6 @@ public class GameManagerActivity extends Activity {
 		gameView = (GameLayout)findViewById(R.layout.game_gird_layout);
 		controlPanel = (ControlPanel)findViewById(R.layout.game_control_layout);
 		
-		//register the listener
-		gameView.setOnTouchListener(new onTouchListener(){
-			public void onTouch()
-			{
-				//merge equal numbers
-				/*
-				 * 
-				 *
-				 * 	historyRecord.push();
-				 * 	boolean win = gameView.merge();
-				 * 	gameView.refreshView();
-				 * 	currentScore = gameView.getScore();
-				 * 	controlPanel.refreshScore();
-				 * 
-				 *
-				 * if(!win)
-				 * {
-				 * //pop a dialog  which prompts that game is over. modify the highscore.
-				 * 	if(currentScore > highScore)
-				 * 	{
-				 * 		historyEditor.putInt("highScore",currentScore);
-				 * 		historyEditor.commit();
-				 * 	}
-				 * }
-				 * 
-				 * 	
-				 * 	
-				 */
-			}
-		});
 	}	
 	
 	/**
@@ -96,5 +69,36 @@ public class GameManagerActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	//每次滑动gameView回调执行的方法
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		//merge equal numbers
+		/*
+		 * 
+		 *
+		 * 	historyRecord.push();
+		 * 	boolean win = gameView.merge();
+		 * 	gameView.refreshView();
+		 * 	currentScore = gameView.getScore();
+		 * 	controlPanel.refreshScore();
+		 * 
+		 *
+		 * if(!win)
+		 * {
+		 * //pop a dialog  which prompts that game is over. modify the highscore.
+		 * 	if(currentScore > highScore)
+		 * 	{
+		 * 		historyEditor.putInt("highScore",currentScore);
+		 * 		historyEditor.commit();
+		 * 	}
+		 * }
+		 * 
+		 * 	
+		 * 	
+		 */
+		return false;
 	}
 }

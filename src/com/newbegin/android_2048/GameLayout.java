@@ -37,17 +37,17 @@ public class GameLayout extends GridLayout {
 
 	public GameLayout(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		initGameView();
+		initGameView(context);
 	}
 
 	public GameLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		initGameView();
+		initGameView(context);
 	}
 
 	public GameLayout(Context context) {
 		super(context);
-		initGameView();
+		initGameView(context);
 	}
 
 	/**
@@ -55,16 +55,10 @@ public class GameLayout extends GridLayout {
 	 * @param
 	 * @return void
 	 */
-	public void initGameView() {
+	public void initGameView(Context context) {
 
 		// »¬¶¯¼àÌý
-		setOnTouchListener(new View.OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				return false;
-			}
-		});
+		this.setOnTouchListener((OnTouchListener) context);
 	}
 	
 	@Override
