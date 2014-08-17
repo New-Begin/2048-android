@@ -12,14 +12,19 @@ public class Card extends TextView{
 		super(context);
 		// TODO Auto-generated constructor stub
 		/*初始化value、number值以及初始背景色*/
-		value = 0;
-		setBackgroundColor(color[value]);
+//		value = 0;
+//		setBackgroundColor(color[value]);
+		init();
 	}
 	
 	//初始化
 	public void init(){
 		value = 0;
+		setTextSize(32);
 		setBackgroundColor(color[value]);
+		/*
+		 * 这里应添加设置Card的通用属性
+		 */
 	}
 	
 	//比较是否相等
@@ -58,6 +63,13 @@ public class Card extends TextView{
 	//获取card的value
 	public int getValue(){
 		return value;
+	}
+	
+	//zhty add
+	public void setValue(int value){
+		this.value = value;
+		setText(""+value);
+		refresh();
 	}
 	
 }
