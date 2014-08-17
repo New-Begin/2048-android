@@ -3,14 +3,11 @@ package com.newbegin.android_2048;
 import java.util.LinkedList;
 import java.util.Random;
 
-import android.R.integer;
+
 import android.content.Context;
-import android.text.InputFilter.LengthFilter;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.GridLayout;
-import android.widget.Toast;
+
 
 /**
  * @ClassName: GameView
@@ -24,9 +21,10 @@ public class GameLayout extends GridLayout {
 	/* 存放一组卡片 */
 	private Card[][] cardMap = new Card[4][4];
 
-	boolean haveBlank;
-	boolean merged;
-	boolean canMove[] = { true, true, true, true };
+	
+	boolean haveBlank;//记录填充时是否有空格
+	boolean merged;//记录是否进行 合并
+	boolean canMove[] = { true, true, true, true };//记录当前是否进行了合并填充
 
 	// 分数
 	private int score;
@@ -166,6 +164,10 @@ public class GameLayout extends GridLayout {
 					while (sec < 4) {
 						if (cardMap[i][sec].getValue() != 0) {
 							if (cardMap[i][fir].isEqual(cardMap[i][sec])) {
+								
+								//加分数
+								score += (int) Math.pow(2, cardMap[i][fir].getValue());
+								
 								cardMap[i][fir].plus();
 								cardMap[i][sec].valueChange(0);
 								fir = sec + 1;
@@ -231,6 +233,10 @@ public class GameLayout extends GridLayout {
 					while (sec >= 0) {
 						if (cardMap[i][sec].getValue() != 0) {
 							if (cardMap[i][fir].isEqual(cardMap[i][sec])) {
+								
+								//加分数
+								score += (int) Math.pow(2, cardMap[i][fir].getValue());
+								
 								cardMap[i][fir].plus();
 								cardMap[i][sec].valueChange(0);
 								fir = sec - 1;
@@ -296,6 +302,10 @@ public class GameLayout extends GridLayout {
 					while (sec < 4) {
 						if (cardMap[sec][i].getValue() != 0) {
 							if (cardMap[fir][i].isEqual(cardMap[sec][i])) {
+								
+								//加分数
+								score += (int) Math.pow(2, cardMap[fir][i].getValue());
+								
 								cardMap[fir][i].plus();
 								cardMap[sec][i].valueChange(0);
 								fir = sec + 1;
@@ -361,6 +371,10 @@ public class GameLayout extends GridLayout {
 					while (sec < 4) {
 						if (cardMap[sec][i].getValue() != 0) {
 							if (cardMap[fir][i].isEqual(cardMap[sec][i])) {
+								
+								//加分数
+								score += (int) Math.pow(2, cardMap[fir][i].getValue());
+								
 								cardMap[fir][i].plus();
 								cardMap[sec][i].valueChange(0);
 								fir = sec - 1;
