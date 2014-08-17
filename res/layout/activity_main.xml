@@ -12,8 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
+    
     <com.newbegin.android_2048.GameLayout
-        android:id="@+id/gridview"  
+        android:id="@+id/gameView"  
 	    android:layout_width="fill_parent"   
 	    android:layout_height="fill_parent"  
 	    android:columnCount='4' 

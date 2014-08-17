@@ -23,6 +23,7 @@ public class GameLayout extends GridLayout {
 
 	/* 存放一组卡片 */
 	private Card[][] cardMap = new Card[4][4];
+
 	boolean haveBlank;
 	boolean merged;
 	boolean canMove[] = { true, true, true, true };
@@ -33,9 +34,6 @@ public class GameLayout extends GridLayout {
 	// card的宽高
 	private int cardWidth;
 
-	public int getter() {
-		return score;
-	}
 
 	// 构造函数
 	public GameLayout(Context context, AttributeSet attrs, int defStyle) {
@@ -52,6 +50,17 @@ public class GameLayout extends GridLayout {
 		super(context);
 		initGameView(context);
 	}
+	
+	//getter
+	public Card[][] getCardMap() {
+		return cardMap;
+	}
+	
+
+	public int getScore() {
+		return score;
+	}
+
 
 	/**
 	 * @Description: 初始化布局,设置滑动监听
@@ -138,7 +147,7 @@ public class GameLayout extends GridLayout {
 	}
 
 	/**
-	 * @Description: 向上滑动
+	 * @Description: 向左滑动
 	 * @param
 	 * @return void
 	 */
