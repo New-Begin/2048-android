@@ -4,13 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.newbegin.android_2048.GameManagerActivity" >
+    
 
     <TextView
         android:id="@+id/correntScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/correntScore" />
-    
+ 
     <TextView
         android:id="@+id/highScore"
         android:layout_width="wrap_content"

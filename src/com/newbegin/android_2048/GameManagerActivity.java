@@ -44,6 +44,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		
 		//refer gameView and controlPanel
 		gameView = (GameLayout)findViewById(R.id.gameView);
+		
 		correntScoreTV = (TextView)findViewById(R.id.correntScore);
 		highScoreTV = (TextView)findViewById(R.id.highScore);
 		
@@ -58,13 +59,13 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		gameHistory = this.getSharedPreferences("gameHistory",Context.MODE_PRIVATE);
 		historyEditor = gameHistory.edit();
 		highScore = gameHistory.getInt("highScore", 0);
-		//controlPanel.setScore(highScore);
-		/*2.initialize data.  
-			gameView.initAarry();
-		*/
-		/*3.refresh UI.
-		 	gameView.refreshView();
-		 */
+		this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
+		
+		//2.initialize data.  
+		gameView.initCardMap();
+		//3.refresh UI.
+		gameView.refreshView();
+
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -124,10 +125,14 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		}
 		//merge equal numbers
 		
-		//boolean win = gameView.merge();
 		gameView.refreshView();
 		currentScore = gameView.getScore();
-		//controlPanel.refreshScore();
+		this.correntScoreTV.setText("CurrentScore:" + Integer.toString(currentScore));
+		if(currentScore > highScore)
+		{
+			this.highScoreTV.setText("HighScore:" + Integer.toString(currentScore));
+		}
+		
 		if(isOver)
 		 {
 		 //pop a dialog  which prompts that game is over. modify the highscore.
