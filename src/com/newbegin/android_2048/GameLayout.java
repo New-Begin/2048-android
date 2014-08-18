@@ -22,6 +22,7 @@ public class GameLayout extends GridLayout {
 
 	boolean haveBlank;// 记录填充时是否有空格
 	boolean merged;// 记录是否进行 合并
+	boolean moved;//记录是否进行了移动
 	boolean canMove[] = { true, true, true, true };// 记录当前是否进行了合并填充
 
 	// 分数
@@ -198,6 +199,7 @@ public class GameLayout extends GridLayout {
 		}
 		haveBlank = false;
 		merged = false;
+		moved = false;
 		int fir = 0, sec = 0;
 		// 合并
 		for (int i = 0; i < 4; i++) {
@@ -238,6 +240,7 @@ public class GameLayout extends GridLayout {
 					sec = fir + 1;
 					while (sec < 4) {
 						if (cardMap[i][sec].getValue() != 0) {
+							moved = true;
 							cardMap[i][fir]
 									.setValue(cardMap[i][sec].getValue());
 							cardMap[i][sec].setValue(0);
@@ -251,20 +254,32 @@ public class GameLayout extends GridLayout {
 
 		// 判断游戏是否结束以及各个方向滑动有没有效果
 		if (merged == false) {
-			if (haveBlank == false) {
+			if (moved == false) {
 				canMove[2] = false;
-				canMove[3] = false;
-				if (!vJudge()) {
-					Log.i("gameview","vJudge");
-					return false;
+				if(haveBlank == false){
+					if (!vJudge()) {
+						return false;
+					}
+					else{
+						canMove[3] = false;
+						canMove[0] = canMove[1] = true;
+						return true;
+					}
 				}
-				canMove[0] = canMove[1] = true;
-				return true;
+				else{
+					canMove[0] = canMove[1] = canMove[3] = true;
+					return true;
+				}				
 			}
-			canMove[0] = canMove[1] = canMove[3] = true;
+			else{
+				canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
+				return true;
+			}			
 		}
-		canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
-		return true;
+		else{
+			canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
+			return true;
+		}
 	}
 
 	// 右滑动合并填充函数
@@ -274,6 +289,7 @@ public class GameLayout extends GridLayout {
 		}
 		haveBlank = false;
 		merged = false;
+		moved = false;
 		int fir = 3, sec = 3;
 		// 合并
 		for (int i = 0; i < 4; i++) {
@@ -312,6 +328,7 @@ public class GameLayout extends GridLayout {
 					sec = fir - 1;
 					while (sec >= 0) {
 						if (cardMap[i][sec].getValue() != 0) {
+							moved = true;
 							cardMap[i][fir]
 									.setValue(cardMap[i][sec].getValue());
 							cardMap[i][sec].setValue(0);
@@ -325,19 +342,32 @@ public class GameLayout extends GridLayout {
 
 		// 判断游戏是否结束以及各个方向滑动有没有效果
 		if (merged == false) {
-			if (haveBlank == false) {
-				canMove[2] = false;
+			if (moved == false) {
 				canMove[3] = false;
-				if (!vJudge()) {
-					return false;
+				if(haveBlank == false){
+					if (!vJudge()) {
+						return false;
+					}
+					else{
+						canMove[2] = false;
+						canMove[0] = canMove[1] = true;
+						return true;
+					}
 				}
-				canMove[0] = canMove[1] = true;
-				return true;
+				else{
+					canMove[0] = canMove[1] = canMove[2] = true;
+					return true;
+				}				
 			}
-			canMove[0] = canMove[1] = canMove[2] = true;
+			else{
+				canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
+				return true;
+			}			
 		}
-		canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
-		return true;
+		else{
+			canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
+			return true;
+		}
 	}
 
 	// 上滑动合并填充函数
@@ -347,6 +377,7 @@ public class GameLayout extends GridLayout {
 		}
 		haveBlank = false;
 		merged = false;
+		moved = false;
 		int fir = 0, sec = 0;
 		// 合并
 		for (int i = 0; i < 4; i++) {
@@ -386,6 +417,7 @@ public class GameLayout extends GridLayout {
 					sec = fir + 1;
 					while (sec < 4) {
 						if (cardMap[sec][i].getValue() != 0) {
+							moved = true;
 							cardMap[fir][i]
 									.setValue(cardMap[sec][i].getValue());
 							cardMap[sec][i].setValue(0);
@@ -399,19 +431,32 @@ public class GameLayout extends GridLayout {
 
 		// 判断游戏是否结束以及各个方向滑动有没有效果
 		if (merged == false) {
-			if (haveBlank == false) {
+			if (moved == false) {
 				canMove[0] = false;
-				canMove[1] = false;
-				if (!hJudge()) {
-					return false;
+				if(haveBlank == false){
+					if (!hJudge()) {
+						return false;
+					}
+					else{
+						canMove[1] = false;
+						canMove[2] = canMove[3] = true;
+						return true;
+					}
 				}
-				canMove[2] = canMove[3] = true;
-				return true;
+				else{
+					canMove[2] = canMove[1] = canMove[3] = true;
+					return true;
+				}				
 			}
-			canMove[1] = canMove[2] = canMove[3] = true;
+			else{
+				canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
+				return true;
+			}			
 		}
-		canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
-		return true;
+		else{
+			canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
+			return true;
+		}
 	}
 
 	// 下滑动合并填充函数
@@ -421,6 +466,7 @@ public class GameLayout extends GridLayout {
 		}
 		haveBlank = false;
 		merged = false;
+		moved = false;
 		int fir = 3, sec = 3;
 		// 合并
 		for (int i = 0; i < 4; i++) {
@@ -460,6 +506,7 @@ public class GameLayout extends GridLayout {
 					sec = fir - 1;
 					while (sec >= 0) {
 						if (cardMap[sec][i].getValue() != 0) {
+							moved = true;
 							cardMap[fir][i]
 									.setValue(cardMap[sec][i].getValue());
 							cardMap[sec][i].setValue(0);
@@ -473,19 +520,32 @@ public class GameLayout extends GridLayout {
 
 		// 判断游戏是否结束以及各个方向滑动有没有效果
 		if (merged == false) {
-			if (haveBlank == false) {
+			if (moved == false) {
 				canMove[1] = false;
-				canMove[0] = false;
-				if (!hJudge()) {
-					return false;
+				if(haveBlank == false){
+					if (!hJudge()) {
+						return false;
+					}
+					else{
+						canMove[0] = false;
+						canMove[2] = canMove[3] = true;
+						return true;
+					}
 				}
-				canMove[2] = canMove[3] = true;
-				return true;
+				else{
+					canMove[2] = canMove[0] = canMove[3] = true;
+					return true;
+				}				
 			}
-			canMove[0] = canMove[2] = canMove[3] = true;
+			else{
+				canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
+				return true;
+			}			
 		}
-		canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
-		return true;
+		else{
+			canMove[0] = canMove[1] = canMove[2] = canMove[3] = true;
+			return true;
+		}
 	}
 
 	// 在没有空格的情况下判断垂直方向有没有相等的相邻数
