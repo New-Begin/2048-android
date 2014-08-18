@@ -371,7 +371,7 @@ public class GameLayout extends GridLayout {
 			for (fir = 3; fir >= 0; fir--) {
 				if (cardMap[fir][i].getValue() != 0) {
 					sec = fir - 1;
-					while (sec < 4) {
+					while (sec >= 0) {
 						if (cardMap[sec][i].getValue() != 0) {
 							if (cardMap[fir][i].isEqual(cardMap[sec][i])) {
 								
@@ -398,7 +398,7 @@ public class GameLayout extends GridLayout {
 				if (cardMap[fir][i].getValue() == 0) {
 					haveBlank = true;
 					sec = fir - 1;
-					while (sec < 4) {
+					while (sec >= 0) {
 						if (cardMap[sec][i].getValue() != 0) {
 							cardMap[fir][i].valueChange(cardMap[sec][i]
 									.getValue());
