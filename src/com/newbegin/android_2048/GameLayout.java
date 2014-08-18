@@ -3,12 +3,10 @@ package com.newbegin.android_2048;
 import java.util.LinkedList;
 import java.util.Random;
 
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.GridLayout;
-
 
 /**
  * @ClassName: GameView
@@ -20,19 +18,17 @@ import android.widget.GridLayout;
 public class GameLayout extends GridLayout {
 
 	/* 存放一组卡片 */
-	private Card[][] cardMap = new Card[4][4];
+	private static Card[][] cardMap = new Card[4][4];
 
-	
-	boolean haveBlank;//记录填充时是否有空格
-	boolean merged;//记录是否进行 合并
-	boolean canMove[] = { true, true, true, true };//记录当前是否进行了合并填充
+	boolean haveBlank;// 记录填充时是否有空格
+	boolean merged;// 记录是否进行 合并
+	boolean canMove[] = { true, true, true, true };// 记录当前是否进行了合并填充
 
 	// 分数
 	private int score = 0;
 
 	// card的宽高
 	private int cardWidth;
-
 
 	// 构造函数
 	public GameLayout(Context context, AttributeSet attrs, int defStyle) {
@@ -49,24 +45,41 @@ public class GameLayout extends GridLayout {
 		super(context);
 		initGameView(context);
 	}
-	
-	//getter && setter
+
+	// getter && setter
 	public Card[][] getCardMap() {
 		return cardMap;
 	}
-	 public void setCardMap(Card[][] oldCardMap){
-		 cardMap = oldCardMap;
-	 }
 
-	public void setScore(int currentScore)
-	{
-		this.score = currentScore;
+	public void setCardMapValue(int[] values) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				cardMap[i][j].setValue(values[4*i+j]);
+			}
+		}
 	}
 	
+	/**
+	 * 获取cardMap的value
+	 * @return value数组
+	 */
+	public int[] getCardMapValue(){
+		int[] a = new int[16];
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				a[4*i+j] = cardMap[i][j].getValue();
+			}
+		}
+		return a;
+	}
+
+	public void setScore(int currentScore) {
+		this.score = currentScore;
+	}
+
 	public int getScore() {
 		return score;
 	}
-
 
 	/**
 	 * @Description: 初始化布局,设置滑动监听
@@ -75,6 +88,8 @@ public class GameLayout extends GridLayout {
 	 */
 	public void initGameView(Context context) {
 
+		initCardMap();
+
 		// 滑动监听
 		this.setOnTouchListener((OnTouchListener) context);
 	}
@@ -82,14 +97,13 @@ public class GameLayout extends GridLayout {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-		cardWidth = (Math.min(w, h)-10) / 4;
-		initCardMap();
-		randomCard();
+		cardWidth = (Math.min(w, h) - 10) / 4;
+
 		addCardView();
 	}
 
 	/**
-	 *  初始化cardMap
+	 * 初始化cardMap
 	 */
 	private void initCardMap() {
 		Card c;
@@ -100,7 +114,7 @@ public class GameLayout extends GridLayout {
 			}
 		}
 	}
-	
+
 	public void clearCardMap() {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
@@ -108,12 +122,13 @@ public class GameLayout extends GridLayout {
 			}
 		}
 	}
-	
+
 	/**
-	 *  随机生成卡片
+	 * 随机生成卡片
+	 * 
 	 * @param cards
 	 */
-	 
+
 	public void randomCard() {
 		System.out.println("GameLayout-------->randomCard()");
 		LinkedList<Integer> ll = new LinkedList<Integer>();
@@ -121,23 +136,23 @@ public class GameLayout extends GridLayout {
 			for (int j = 0; j < 4; j++) {
 				if (cardMap[i][j] != null) {
 					if (cardMap[i][j].getValue() == 0) {
-						ll.add(4*i+j);
+						ll.add(4 * i + j);
 					}
 				}
 			}
 		}
 		Random rd = new Random();
-		Log.i("gamelayout", "ll.size() = "+ll.size());
-		if(ll.size() == 0)
+		Log.i("gamelayout", "ll.size() = " + ll.size());
+		if (ll.size() == 0)
 			return;
-		int index =rd.nextInt(ll.size());
-		int x=ll.get(index)/4;
-		int y=ll.get(index) -4*x;
+		int index = rd.nextInt(ll.size());
+		int x = ll.get(index) / 4;
+		int y = ll.get(index) - 4 * x;
 		int value;
-		//10分之1的概率生成4
-		if (rd.nextInt(10)==4) {
+		// 10分之1的概率生成4
+		if (rd.nextInt(10) == 4) {
 			value = 2;
-		}else{
+		} else {
 			value = 1;
 		}
 		cardMap[x][y].setValue(value);
@@ -152,15 +167,16 @@ public class GameLayout extends GridLayout {
 	public void refreshView() {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				
+
 				cardMap[i][j].refresh();
-				System.out.println("refreshView---->"+i+j+"-->"+cardMap[i][j].getValue());
+				System.out.println("refreshView---->" + i + j + "-->"
+						+ cardMap[i][j].getValue());
 			}
 		}
 	}
-	
-	//在GridLayout中添加Card
-	public void addCardView(){
+
+	// 在GridLayout中添加Card
+	public void addCardView() {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				cardMap[i][j].refresh();
@@ -174,7 +190,7 @@ public class GameLayout extends GridLayout {
 	 * @param
 	 * @return void
 	 */
-	
+
 	// 左滑动合并填充函数
 	boolean gameLeft() {
 		if (!canMove[2])
@@ -190,10 +206,12 @@ public class GameLayout extends GridLayout {
 					while (sec < 4) {
 						if (cardMap[i][sec].getValue() != 0) {
 							if (cardMap[i][fir].isEqual(cardMap[i][sec])) {
-								
-								//加分数
-								score = score + (int) Math.pow(2, cardMap[i][fir].getValue() + 1);
-								
+
+								// 加分数
+								score = score
+										+ (int) Math.pow(2,
+												cardMap[i][fir].getValue() + 1);
+
 								System.out.println("down score----->" + score);
 								cardMap[i][fir].plus();
 								cardMap[i][sec].setValue(0);
@@ -217,8 +235,8 @@ public class GameLayout extends GridLayout {
 					sec = fir + 1;
 					while (sec < 4) {
 						if (cardMap[i][sec].getValue() != 0) {
-							cardMap[i][fir].setValue(cardMap[i][sec]
-									.getValue());
+							cardMap[i][fir]
+									.setValue(cardMap[i][sec].getValue());
 							cardMap[i][sec].setValue(0);
 							fir += 1;
 						}
@@ -260,10 +278,12 @@ public class GameLayout extends GridLayout {
 					while (sec >= 0) {
 						if (cardMap[i][sec].getValue() != 0) {
 							if (cardMap[i][fir].isEqual(cardMap[i][sec])) {
-								
-								//加分数
-								score = score + (int) Math.pow(2, cardMap[i][fir].getValue() + 1);
-								
+
+								// 加分数
+								score = score
+										+ (int) Math.pow(2,
+												cardMap[i][fir].getValue() + 1);
+
 								cardMap[i][fir].plus();
 								cardMap[i][sec].setValue(0);
 								fir = sec - 1;
@@ -286,8 +306,8 @@ public class GameLayout extends GridLayout {
 					sec = fir - 1;
 					while (sec >= 0) {
 						if (cardMap[i][sec].getValue() != 0) {
-							cardMap[i][fir].setValue(cardMap[i][sec]
-									.getValue());
+							cardMap[i][fir]
+									.setValue(cardMap[i][sec].getValue());
 							cardMap[i][sec].setValue(0);
 							fir -= 1;
 						}
@@ -329,10 +349,12 @@ public class GameLayout extends GridLayout {
 					while (sec < 4) {
 						if (cardMap[sec][i].getValue() != 0) {
 							if (cardMap[fir][i].isEqual(cardMap[sec][i])) {
-								
-								//加分数
-								score = score + (int) Math.pow(2, cardMap[fir][i].getValue() + 1);
-								
+
+								// 加分数
+								score = score
+										+ (int) Math.pow(2,
+												cardMap[fir][i].getValue() + 1);
+
 								cardMap[fir][i].plus();
 								cardMap[sec][i].setValue(0);
 								fir = sec + 1;
@@ -355,8 +377,8 @@ public class GameLayout extends GridLayout {
 					sec = fir + 1;
 					while (sec < 4) {
 						if (cardMap[sec][i].getValue() != 0) {
-							cardMap[fir][i].setValue(cardMap[sec][i]
-									.getValue());
+							cardMap[fir][i]
+									.setValue(cardMap[sec][i].getValue());
 							cardMap[sec][i].setValue(0);
 							fir += 1;
 						}
@@ -398,10 +420,12 @@ public class GameLayout extends GridLayout {
 					while (sec >= 0) {
 						if (cardMap[sec][i].getValue() != 0) {
 							if (cardMap[fir][i].isEqual(cardMap[sec][i])) {
-								
-								//加分数
-								score = score + (int) Math.pow(2, cardMap[fir][i].getValue() + 1);
-								
+
+								// 加分数
+								score = score
+										+ (int) Math.pow(2,
+												cardMap[fir][i].getValue() + 1);
+
 								cardMap[fir][i].plus();
 								cardMap[sec][i].setValue(0);
 								fir = sec - 1;
@@ -424,8 +448,8 @@ public class GameLayout extends GridLayout {
 					sec = fir - 1;
 					while (sec >= 0) {
 						if (cardMap[sec][i].getValue() != 0) {
-							cardMap[fir][i].setValue(cardMap[sec][i]
-									.getValue());
+							cardMap[fir][i]
+									.setValue(cardMap[sec][i].getValue());
 							cardMap[sec][i].setValue(0);
 							fir -= 1;
 						}

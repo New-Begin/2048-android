@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class GameManagerActivity extends Activity implements OnTouchListener {
@@ -68,10 +69,11 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
 		this.correntScoreTV.setText("CurrentScore:" + 0);
 		historyRecord.clearStack();
-		//2.initialize data.  
-//		gameView.initCardMap();
-		//3.refresh UI.
-//		gameView.refreshView();
+//		2.initialize data.  
+		gameView.clearCardMap();
+//		3.refresh UI.
+		gameView.randomCard();
+		gameView.refreshView();
 
 	}
 	@Override
@@ -89,18 +91,18 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		int id = item.getItemId();
 		switch (id) {
 		case R.id.restart:
-//			this.init();
-			gameView.clearCardMap();
-			gameView.randomCard();
-			gameView.refreshView();
-			System.out.println("restart");
+
+			this.init();
 			break;
 		case R.id.undo:
-			gameView.setCardMap(historyRecord.pop());
-			gameView.refreshView();
+			if(!historyRecord.empty())
+			{
+				gameView.setCardMapValue(historyRecord.pop());
+				gameView.refreshView();
+			}
+			else
+				Toast.makeText(getApplicationContext(), "菜鸡！只能回退一次！", Toast.LENGTH_LONG).show();
 			break;
-
-			
 		}
 		return super.onOptionsItemSelected(item);
 
@@ -119,7 +121,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			break;
 		case MotionEvent.ACTION_UP:
 			//记录当前棋局
-			historyRecord.push(gameView.getCardMap());
+			historyRecord.push(gameView.getCardMapValue());
 			
 			offsetX = event.getX() - X;
 			offsetY = event.getY() - Y;
