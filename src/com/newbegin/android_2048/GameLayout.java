@@ -75,7 +75,7 @@ public class GameLayout extends GridLayout {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-		cardWidth = (Math.min(w, h) - 10) / 4;
+		cardWidth = (Math.min(w, h)-10) / 4;
 		initCardMap();
 //		randomCard(cardMap);
 		refreshView();
@@ -151,7 +151,16 @@ public class GameLayout extends GridLayout {
 	 * @return void
 	 */
 	public void refreshView() {
-		removeAllViews();
+		randomCard(cardMap);
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+//				addView(cardMap[i][j], cardWidth, cardWidth);
+				cardMap[i][j].refresh();
+			}
+		}
+	}
+	
+	public void addView(){
 		randomCard(cardMap);
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {

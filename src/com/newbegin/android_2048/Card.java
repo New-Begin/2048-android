@@ -2,80 +2,83 @@ package com.newbegin.android_2048;
 
 import android.content.Context;
 import android.view.Gravity;
-import android.widget.GridLayout;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
-public class Card extends TextView{
-	
+
+public class Card extends FrameLayout {
+
 	private int value = 0;
-	private int[] color = {0x0fff0000,0x10ff0000,0x20ff0000,0x30ff0000,0x40ff0000,0x50ff0000,0x60ff0000,
-			0x70ff0000,0x80ff0000,0x90ff0000,0xa0ff0000,0xb0ff0000,0xc0ff0000,0xd0ff0000,0xe0ff0000,0xf0ff0000};
-	
+	private int[] color = { 0x0fff0000, 0x10ff0000, 0x20ff0000, 0x30ff0000,
+			0x40ff0000, 0x50ff0000, 0x60ff0000, 0x70ff0000, 0x80ff0000,
+			0x90ff0000, 0xa0ff0000, 0xb0ff0000, 0xc0ff0000, 0xd0ff0000,
+			0xe0ff0000, 0xf0ff0000 };
+	private TextView label = new TextView(getContext());
+
 	public Card(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
-		/*初始化value、number值以及初始背景色*/
-//		value = 0;
-//		setBackgroundColor(color[value]);
+		/* 初始化value、number值以及初始背景色 */
+		// value = 0;
+		// setBackgroundColor(color[value]);
 		init();
 	}
-	
-	//初始化
-	public void init(){
-		setTextSize(32);
-		setBackgroundColor(color[value]);
-		setGravity(Gravity.CENTER);
-		GridLayout.LayoutParams lp = new GridLayout.LayoutParams();  
-		lp.setMargins(10, 20, 30, 40);  
-		setLayoutParams(lp); 
+
+	// 初始化
+	public void init() {
 		/*
 		 * 这里应添加设置Card的通用属性
 		 */
+		label.setTextSize(32);
+		label.setBackgroundColor(color[value]);
+		label.setGravity(Gravity.CENTER);
+		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		lp.setMargins(5, 5, 5, 5);
+		addView(label, lp);
+
 	}
-	
-	//比较是否相等
-	public boolean isEqual(Card other){
-		if(value == other.getValue())
+
+	// 比较是否相等
+	public boolean isEqual(Card other) {
+		if (value == other.getValue())
 			return true;
 		else
 			return false;
 	}
-	
-	//value值增加
-	public void plus(){
+
+	// value值增加
+	public void plus() {
 		value++;
 		return;
 	}
 
-	//改变value
-	public void valueChange(int task){
+	// 改变value
+	public void valueChange(int task) {
 		value = task;
 		return;
 	}
-	
-	//刷新card代表的值以及背景色
-	public void refresh(){
-		if(value == 0){
+
+	// 刷新card代表的值以及背景色
+	public void refresh() {
+		if (value == 0) {
 			return;
-		}
-		else{
+		} else {
 			int number = (int) Math.pow(2, value);
-			//将number转换成字符串，否则显示int的地址
-			setText(""+number);
-			setBackgroundColor(color[value]);
+			// 将number转换成字符串，否则显示int的地址
+			label.setText("" + number);
+			label.setBackgroundColor(color[value]);
 		}
-		
+
 	}
-	
-	//获取card的value
-	public int getValue(){
+
+	// 获取card的value
+	public int getValue() {
 		return value;
 	}
-	
-	//zhty add
-	public void setValue(int value){
+
+	// zhty add
+	public void setValue(int value) {
 		this.value = value;
-		refresh();
 	}
-	
+
 }
