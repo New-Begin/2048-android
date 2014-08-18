@@ -66,14 +66,13 @@ public class Card extends FrameLayout {
 	// 刷新card代表的值以及背景色
 	public void refresh() {
 		if (value == 0) {
-			return;
+			label.setText("");
 		} else {
 			int number = (int) Math.pow(2, value);
 			// 将number转换成字符串，否则显示int的地址
 			label.setText("" + number);
-			label.setBackgroundColor(color[value]);
 		}
-
+		label.setBackgroundColor(color[value]);
 	}
 
 	// 获取card的value
