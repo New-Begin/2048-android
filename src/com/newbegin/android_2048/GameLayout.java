@@ -194,7 +194,8 @@ public class GameLayout extends GridLayout {
 							if (cardMap[i][fir].isEqual(cardMap[i][sec])) {
 								
 								//加分数
-								score += (int) Math.pow(2, cardMap[i][fir].getValue());
+								score = score + (int) Math.pow(2, cardMap[i][fir].getValue() + 1);
+								
 								System.out.println("down score----->" + score);
 								cardMap[i][fir].plus();
 								cardMap[i][sec].valueChange(0);
@@ -263,7 +264,7 @@ public class GameLayout extends GridLayout {
 							if (cardMap[i][fir].isEqual(cardMap[i][sec])) {
 								
 								//加分数
-								score += (int) Math.pow(2, cardMap[i][fir].getValue());
+								score = score + (int) Math.pow(2, cardMap[i][fir].getValue() + 1);
 								
 								cardMap[i][fir].plus();
 								cardMap[i][sec].valueChange(0);
@@ -332,7 +333,7 @@ public class GameLayout extends GridLayout {
 							if (cardMap[fir][i].isEqual(cardMap[sec][i])) {
 								
 								//加分数
-								score += (int) Math.pow(2, cardMap[fir][i].getValue());
+								score = score + (int) Math.pow(2, cardMap[fir][i].getValue() + 1);
 								
 								cardMap[fir][i].plus();
 								cardMap[sec][i].valueChange(0);
@@ -401,7 +402,7 @@ public class GameLayout extends GridLayout {
 							if (cardMap[fir][i].isEqual(cardMap[sec][i])) {
 								
 								//加分数
-								score += (int) Math.pow(2, cardMap[fir][i].getValue());
+								score = score + (int) Math.pow(2, cardMap[fir][i].getValue() + 1);
 								
 								cardMap[fir][i].plus();
 								cardMap[sec][i].valueChange(0);

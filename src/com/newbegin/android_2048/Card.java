@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 public class Card extends TextView{
 	
-	private int value = 0;
+	private int value;
 	private int[] color = {0x0fff0000,0x10ff0000,0x20ff0000,0x30ff0000,0x40ff0000,0x50ff0000,0x60ff0000,
 			0x70ff0000,0x80ff0000,0x90ff0000,0xa0ff0000,0xb0ff0000,0xc0ff0000,0xd0ff0000,0xe0ff0000,0xf0ff0000};
 	
@@ -22,6 +22,7 @@ public class Card extends TextView{
 	
 	//≥ı ºªØ
 	public void init(){
+		value = 0;
 		setTextSize(32);
 		setBackgroundColor(color[value]);
 		setGravity(Gravity.CENTER);
