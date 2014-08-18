@@ -5,9 +5,10 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+
 public class Card extends FrameLayout {
 
-	private int value = 0;
+	private int value;
 	private int[] color = { 0x0fff0000, 0x10ff0000, 0x20ff0000, 0x30ff0000,
 			0x40ff0000, 0x50ff0000, 0x60ff0000, 0x70ff0000, 0x80ff0000,
 			0x90ff0000, 0xa0ff0000, 0xb0ff0000, 0xc0ff0000, 0xd0ff0000,
@@ -23,8 +24,10 @@ public class Card extends FrameLayout {
 		init();
 	}
 
-	// 初始化
-	public void init() {
+	//初始化
+	public void init(){
+		value = 0;
+
 		/*
 		 * 这里应添加设置Card的通用属性
 		 */
@@ -52,8 +55,10 @@ public class Card extends FrameLayout {
 		return;
 	}
 
-	// 改变value
-	public void valueChange(int task) {
+
+	//改变value
+	public void setValue(int task){
+
 		value = task;
 		return;
 	}
@@ -74,11 +79,6 @@ public class Card extends FrameLayout {
 	// 获取card的value
 	public int getValue() {
 		return value;
-	}
-
-	// zhty add
-	public void setValue(int value) {
-		this.value = value;
 	}
 
 }

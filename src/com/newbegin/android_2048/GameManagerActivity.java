@@ -2,7 +2,10 @@ package com.newbegin.android_2048;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +22,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	private GameLayout gameView; //contain a double dimensional array gameView numArray;
 	
 	//保存上一步操作的堆栈
-	private HistoryStack historyRecord = new HistoryStack();//a stack that remains past gameView.numArray;
+	private HistoryStack historyRecord = new HistoryStack();//a stack that remains past gameView CardMap;
 	
 	//获取存储的历史最高分
 	private SharedPreferences gameHistory;
@@ -29,7 +32,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	private int highScore;
 	
 	//判断游戏是否结束
-	private boolean isOver = false;
+	private boolean isContinue = true;
 	//onTouch事件的初始坐标和偏移量，用于判断移动方向
 	private float X, Y, offsetX, offsetY;
 	
@@ -37,6 +40,9 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	private TextView correntScoreTV;
 	private TextView highScoreTV;
 
+	//游戏结束提示框
+	private AlertDialog.Builder gameOverDialog;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,9 +63,11 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		//1.load the history high score;
 		gameHistory = this.getSharedPreferences("gameHistory",Context.MODE_PRIVATE);
 		historyEditor = gameHistory.edit();
-		highScore = gameHistory.getInt("highScore", 0);
+		highScore = gameHistory.getInt("highScore", 0);		
+		gameView.setScore(0);
 		this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
-		
+		this.correntScoreTV.setText("CurrentScore:" + 0);
+		historyRecord.clearStack();
 		//2.initialize data.  
 		gameView.initCardMap();
 		//3.refresh UI.
@@ -79,10 +87,18 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		switch (id) {
+		case R.id.restart:
+			this.init();
 			return true;
+		case R.id.undo:
+			//gameView.refreshView(historyRecord.pop());
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
 		}
-		return super.onOptionsItemSelected(item);
+
 	}
 
 	//每次滑动gameView回调执行的方法
@@ -90,8 +106,6 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		
-		//记录当前棋局
-		//historyRecord.push(gameView.getCardMap());
 		
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
@@ -99,24 +113,27 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			Y = event.getY();
 			break;
 		case MotionEvent.ACTION_UP:
+			//记录当前棋局
+			historyRecord.push(gameView.getCardMap());
+			
 			offsetX = event.getX() - X;
 			offsetY = event.getY() - Y;
 			// 先判断方向
 			if (Math.abs(offsetX) > Math.abs(offsetY)) {
 				if (offsetX > 5) {
 					Log.i("gameview", "right");
-					isOver = gameView.gameRight();
+					isContinue = gameView.gameRight();
 				} else if (offsetX < -5) {
 					Log.i("gameview", "left");
-					isOver = gameView.gameLeft();
+					isContinue = gameView.gameLeft();
 				}
 			} else if (Math.abs(offsetX) < Math.abs(offsetY)) {
 				if (offsetY > 5) {
 					Log.i("gameview", "down");
-					isOver = gameView.gameDown();
+					isContinue = gameView.gameDown();
 				} else if (offsetY < -5) {
 					Log.i("gameview", "up");
-					isOver = gameView.gameUp();
+					isContinue = gameView.gameUp();
 				}
 			}
 			//merge equal numbers			
@@ -128,7 +145,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 				this.highScoreTV.setText("HighScore:" + Integer.toString(currentScore));
 			}
 			
-			if(isOver)
+			if(!isContinue)
 			 {
 			 //pop a dialog  which prompts that game is over. modify the highscore.
 			 if(currentScore > highScore)
@@ -136,6 +153,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 				historyEditor.putInt("highScore",currentScore);
 			  	historyEditor.commit();
 			  	}
+				showgameOverDialog();
 			  }	
 			break;
 		default:
@@ -143,5 +161,34 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		}
 		return true;
 	}
+	
+	/** 游戏结束提示框*/
+	private void showgameOverDialog()
+	{
+		gameOverDialog = new AlertDialog.Builder(this);
+		gameOverDialog.setMessage("菜鸡，游戏到此结束！");
+		gameOverDialog.setTitle("Game Over！！");
+		gameOverDialog.setCancelable(false);
+		//重新加载列表
+		gameOverDialog.setPositiveButton("我退了！", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+				GameManagerActivity.this.finish();
+			}
+		});
+		//退出当前Activity
+		gameOverDialog.setNegativeButton("我不服！", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+				GameManagerActivity.this.init();
+			}
+		});
+		gameOverDialog.create().show();
+	}	
 
 }
