@@ -91,12 +91,20 @@ public class GameLayout extends GridLayout {
 	/**
 	 *  ≥ı ºªØcardMap
 	 */
-	public void initCardMap() {
+	private void initCardMap() {
 		Card c;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				c = new Card(getContext());
 				cardMap[i][j] = c;
+			}
+		}
+	}
+	
+	public void clearCardMap() {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				cardMap[i][j].setValue(0);
 			}
 		}
 	}
@@ -144,7 +152,9 @@ public class GameLayout extends GridLayout {
 	public void refreshView() {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
+				
 				cardMap[i][j].refresh();
+				System.out.println("refreshView---->"+i+j+"-->"+cardMap[i][j].getValue());
 			}
 		}
 	}

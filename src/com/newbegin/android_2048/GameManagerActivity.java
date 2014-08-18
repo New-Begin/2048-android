@@ -69,9 +69,9 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		this.correntScoreTV.setText("CurrentScore:" + 0);
 		historyRecord.clearStack();
 		//2.initialize data.  
-		gameView.initCardMap();
+//		gameView.initCardMap();
 		//3.refresh UI.
-		gameView.refreshView();
+//		gameView.refreshView();
 
 	}
 	@Override
@@ -89,16 +89,20 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		int id = item.getItemId();
 		switch (id) {
 		case R.id.restart:
-			this.init();
-			return true;
+//			this.init();
+			gameView.clearCardMap();
+			gameView.randomCard();
+			gameView.refreshView();
+			System.out.println("restart");
+			break;
 		case R.id.undo:
 			gameView.setCardMap(historyRecord.pop());
 			gameView.refreshView();
-			return true;
+			break;
 
-		default:
-			return super.onOptionsItemSelected(item);
+			
 		}
+		return super.onOptionsItemSelected(item);
 
 	}
 
