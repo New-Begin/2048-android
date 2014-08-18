@@ -190,7 +190,7 @@ public class GameLayout extends GridLayout {
 								
 								//¼Ó·ÖÊý
 								score += (int) Math.pow(2, cardMap[i][fir].getValue());
-								
+								System.out.println("down score----->" + score);
 								cardMap[i][fir].plus();
 								cardMap[i][sec].valueChange(0);
 								fir = sec + 1;

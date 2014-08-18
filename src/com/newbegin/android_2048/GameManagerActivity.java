@@ -42,11 +42,11 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		//refer gameView and controlPanel
 		gameView = (GameLayout)findViewById(R.id.gameView);
 		correntScoreTV = (TextView)findViewById(R.id.correntScore);
 		highScoreTV = (TextView)findViewById(R.id.highScore);
 		
+		init();
 	}	
 	
 	/**
@@ -58,13 +58,13 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		gameHistory = this.getSharedPreferences("gameHistory",Context.MODE_PRIVATE);
 		historyEditor = gameHistory.edit();
 		highScore = gameHistory.getInt("highScore", 0);
-		//controlPanel.setScore(highScore);
-		/*2.initialize data.  
-			gameView.initAarry();
-		*/
-		/*3.refresh UI.
-		 	gameView.refreshView();
-		 */
+		this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
+		
+		//2.initialize data.  
+		gameView.initCardMap();
+		//3.refresh UI.
+		gameView.refreshView();
+
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,8 +89,9 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	//实现onTouch接口,zhty add
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
+		
 		//记录当前棋局
-		historyRecord.push(gameView.getCardMap());
+		//historyRecord.push(gameView.getCardMap());
 		
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
@@ -118,25 +119,28 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 					isOver = gameView.gameUp();
 				}
 			}
+			//merge equal numbers			
+			gameView.refreshView();
+			currentScore = gameView.getScore();
+			this.correntScoreTV.setText("CurrentScore:" + Integer.toString(currentScore));
+			if(currentScore > highScore)
+			{
+				this.highScoreTV.setText("HighScore:" + Integer.toString(currentScore));
+			}
+			
+			if(isOver)
+			 {
+			 //pop a dialog  which prompts that game is over. modify the highscore.
+			 if(currentScore > highScore)
+			 {
+				historyEditor.putInt("highScore",currentScore);
+			  	historyEditor.commit();
+			  	}
+			  }	
 			break;
 		default:
 			break;
 		}
-		//merge equal numbers
-		
-		//boolean win = gameView.merge();
-		gameView.refreshView();
-		currentScore = gameView.getScore();
-		//controlPanel.refreshScore();
-		if(isOver)
-		 {
-		 //pop a dialog  which prompts that game is over. modify the highscore.
-		 if(currentScore > highScore)
-		 {
-			historyEditor.putInt("highScore",currentScore);
-		  	historyEditor.commit();
-		  	}
-		  }	
 		return true;
 	}
 
