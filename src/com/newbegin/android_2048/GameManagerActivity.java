@@ -92,7 +92,8 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			this.init();
 			return true;
 		case R.id.undo:
-			//gameView.refreshView(historyRecord.pop());
+			gameView.setCardMap(historyRecord.pop());
+			gameView.refreshView();
 			return true;
 
 		default:
@@ -136,6 +137,8 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 					isContinue = gameView.gameUp();
 				}
 			}
+			System.out.println("onTouch-------->random");
+			gameView.randomCard();
 			//merge equal numbers			
 			gameView.refreshView();
 			currentScore = gameView.getScore();

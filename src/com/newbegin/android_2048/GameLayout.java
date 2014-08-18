@@ -54,7 +54,9 @@ public class GameLayout extends GridLayout {
 	public Card[][] getCardMap() {
 		return cardMap;
 	}
-	
+	 public void setCardMap(Card[][] oldCardMap){
+		 cardMap = oldCardMap;
+	 }
 
 	public void setScore(int currentScore)
 	{
@@ -105,6 +107,7 @@ public class GameLayout extends GridLayout {
 	 */
 	 
 	public void randomCard() {
+		System.out.println("GameLayout-------->randomCard()");
 		LinkedList<Integer> ll = new LinkedList<Integer>();
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
@@ -117,6 +120,8 @@ public class GameLayout extends GridLayout {
 		}
 		Random rd = new Random();
 		Log.i("gamelayout", "ll.size() = "+ll.size());
+		if(ll.size() == 0)
+			return;
 		int index =rd.nextInt(ll.size());
 		int x=ll.get(index)/4;
 		int y=ll.get(index) -4*x;
