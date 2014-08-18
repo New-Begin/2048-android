@@ -9,7 +9,8 @@ import android.widget.TextView;
 public class Card extends FrameLayout {
 
 	private int value;
-	private int[] color = { 0x0fff0000, 0x10ff0000, 0x20ff0000, 0x30ff0000,
+	//°Ù·Ö±È£¬R£¬G£¬B
+	private int[] color = { 0x08ff0000, 0x10ff0000, 0x20ff0000, 0x30ff0000,
 			0x40ff0000, 0x50ff0000, 0x60ff0000, 0x70ff0000, 0x80ff0000,
 			0x90ff0000, 0xa0ff0000, 0xb0ff0000, 0xc0ff0000, 0xd0ff0000,
 			0xe0ff0000, 0xf0ff0000 };
