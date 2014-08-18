@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class GameManagerActivity extends Activity implements OnTouchListener {
@@ -90,15 +91,18 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		switch (id) {
 		case R.id.restart:
 			this.init();
-			return true;
+			break;
 		case R.id.undo:
-			gameView.setCardMap(historyRecord.pop());
-			gameView.refreshView();
-			return true;
-
-		default:
-			return super.onOptionsItemSelected(item);
+			if(!historyRecord.empty())
+			{
+				gameView.setCardMap(historyRecord.pop());
+				gameView.refreshView();
+			}
+			else
+				Toast.makeText(getApplicationContext(), "菜鸡！只能回退一次！", Toast.LENGTH_LONG).show();
+			break;
 		}
+		return super.onOptionsItemSelected(item);
 
 	}
 
