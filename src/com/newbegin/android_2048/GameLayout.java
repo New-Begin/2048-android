@@ -78,7 +78,8 @@ public class GameLayout extends GridLayout {
 		cardWidth = (Math.min(w, h) - 10) / 4;
 		initCardMap();
 		randomCard(cardMap);
-		refresh(cardMap, cardWidth, cardWidth);
+		refreshView();
+//		refresh(cardMap, cardWidth, cardWidth);
 	}
 
 	// ≥ı ºªØcardMap
@@ -144,7 +145,12 @@ public class GameLayout extends GridLayout {
 	 * @return void
 	 */
 	public void refreshView() {
-
+		removeAllViews();
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				addView(cardMap[i][j], cardWidth, cardWidth);
+			}
+		}
 	}
 
 	/**
