@@ -198,7 +198,7 @@ public class GameLayout extends GridLayout {
 								
 								System.out.println("down score----->" + score);
 								cardMap[i][fir].plus();
-								cardMap[i][sec].valueChange(0);
+								cardMap[i][sec].setValue(0);
 								fir = sec + 1;
 								merged = true;
 							} else
@@ -219,9 +219,9 @@ public class GameLayout extends GridLayout {
 					sec = fir + 1;
 					while (sec < 4) {
 						if (cardMap[i][sec].getValue() != 0) {
-							cardMap[i][fir].valueChange(cardMap[i][sec]
+							cardMap[i][fir].setValue(cardMap[i][sec]
 									.getValue());
-							cardMap[i][sec].valueChange(0);
+							cardMap[i][sec].setValue(0);
 							fir += 1;
 						}
 						sec++;
@@ -267,7 +267,7 @@ public class GameLayout extends GridLayout {
 								score = score + (int) Math.pow(2, cardMap[i][fir].getValue() + 1);
 								
 								cardMap[i][fir].plus();
-								cardMap[i][sec].valueChange(0);
+								cardMap[i][sec].setValue(0);
 								fir = sec - 1;
 								merged = true;
 							} else
@@ -288,9 +288,9 @@ public class GameLayout extends GridLayout {
 					sec = fir - 1;
 					while (sec >= 0) {
 						if (cardMap[i][sec].getValue() != 0) {
-							cardMap[i][fir].valueChange(cardMap[i][sec]
+							cardMap[i][fir].setValue(cardMap[i][sec]
 									.getValue());
-							cardMap[i][sec].valueChange(0);
+							cardMap[i][sec].setValue(0);
 							fir -= 1;
 						}
 						sec--;
@@ -336,7 +336,7 @@ public class GameLayout extends GridLayout {
 								score = score + (int) Math.pow(2, cardMap[fir][i].getValue() + 1);
 								
 								cardMap[fir][i].plus();
-								cardMap[sec][i].valueChange(0);
+								cardMap[sec][i].setValue(0);
 								fir = sec + 1;
 								merged = true;
 							} else
@@ -357,9 +357,9 @@ public class GameLayout extends GridLayout {
 					sec = fir + 1;
 					while (sec < 4) {
 						if (cardMap[sec][i].getValue() != 0) {
-							cardMap[fir][i].valueChange(cardMap[sec][i]
+							cardMap[fir][i].setValue(cardMap[sec][i]
 									.getValue());
-							cardMap[sec][i].valueChange(0);
+							cardMap[sec][i].setValue(0);
 							fir += 1;
 						}
 						sec++;
@@ -405,7 +405,7 @@ public class GameLayout extends GridLayout {
 								score = score + (int) Math.pow(2, cardMap[fir][i].getValue() + 1);
 								
 								cardMap[fir][i].plus();
-								cardMap[sec][i].valueChange(0);
+								cardMap[sec][i].setValue(0);
 								fir = sec - 1;
 								merged = true;
 							} else
@@ -426,9 +426,9 @@ public class GameLayout extends GridLayout {
 					sec = fir - 1;
 					while (sec >= 0) {
 						if (cardMap[sec][i].getValue() != 0) {
-							cardMap[fir][i].valueChange(cardMap[sec][i]
+							cardMap[fir][i].setValue(cardMap[sec][i]
 									.getValue());
-							cardMap[sec][i].valueChange(0);
+							cardMap[sec][i].setValue(0);
 							fir -= 1;
 						}
 						sec--;

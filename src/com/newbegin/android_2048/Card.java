@@ -49,7 +49,7 @@ public class Card extends TextView{
 	}
 
 	//改变value
-	public void valueChange(int task){
+	public void setValue(int task){
 		value = task;
 		return;
 	}
@@ -71,12 +71,6 @@ public class Card extends TextView{
 	//获取card的value
 	public int getValue(){
 		return value;
-	}
-	
-	//zhty add
-	public void setValue(int value){
-		this.value = value;
-		refresh();
 	}
 	
 }
