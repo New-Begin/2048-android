@@ -50,12 +50,17 @@ public class GameLayout extends GridLayout {
 		initGameView(context);
 	}
 	
-	//getter
+	//getter && setter
 	public Card[][] getCardMap() {
 		return cardMap;
 	}
 	
 
+	public void setScore(int currentScore)
+	{
+		this.score = currentScore;
+	}
+	
 	public int getScore() {
 		return score;
 	}
