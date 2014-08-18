@@ -4,5 +4,7 @@
     <string name="app_name">android_2048</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="correntScore">Score:</string>
+    <string name="highScore">HighScore</string>
 
 </resources>

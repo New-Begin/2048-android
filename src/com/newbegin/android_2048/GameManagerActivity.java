@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.TextView;
 
 
 public class GameManagerActivity extends Activity implements OnTouchListener {
@@ -31,6 +32,10 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	private boolean isOver = false;
 	//onTouch事件的初始坐标和偏移量，用于判断移动方向
 	private float X, Y, offsetX, offsetY;
+	
+	//显示当前分数和最高分的组件
+	private TextView correntScoreTV;
+	private TextView highScoreTV;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,8 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		
 		//refer gameView and controlPanel
 		gameView = (GameLayout)findViewById(R.id.gameView);
+		correntScoreTV = (TextView)findViewById(R.id.correntScore);
+		highScoreTV = (TextView)findViewById(R.id.highScore);
 		
 	}	
 	

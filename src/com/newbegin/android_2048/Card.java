@@ -1,11 +1,14 @@
 package com.newbegin.android_2048;
 
 import android.content.Context;
+import android.view.Gravity;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 public class Card extends TextView{
 	
-	private int value;
-	private int[] color = {0x00ff0000,0x10ff0000,0x20ff0000,0x30ff0000,0x40ff0000,0x50ff0000,0x60ff0000,
+	private int value = 0;
+	private int[] color = {0x0fff0000,0x10ff0000,0x20ff0000,0x30ff0000,0x40ff0000,0x50ff0000,0x60ff0000,
 			0x70ff0000,0x80ff0000,0x90ff0000,0xa0ff0000,0xb0ff0000,0xc0ff0000,0xd0ff0000,0xe0ff0000,0xf0ff0000};
 	
 	public Card(Context context) {
@@ -19,9 +22,12 @@ public class Card extends TextView{
 	
 	//初始化
 	public void init(){
-		value = 0;
 		setTextSize(32);
 		setBackgroundColor(color[value]);
+		setGravity(Gravity.CENTER);
+		GridLayout.LayoutParams lp = new GridLayout.LayoutParams();  
+		lp.setMargins(10, 20, 30, 40);  
+		setLayoutParams(lp); 
 		/*
 		 * 这里应添加设置Card的通用属性
 		 */
@@ -54,7 +60,8 @@ public class Card extends TextView{
 		}
 		else{
 			int number = (int) Math.pow(2, value);
-			setText(number);
+			//将number转换成字符串，否则显示int的地址
+			setText(""+number);
 			setBackgroundColor(color[value]);
 		}
 		
@@ -68,7 +75,6 @@ public class Card extends TextView{
 	//zhty add
 	public void setValue(int value){
 		this.value = value;
-		setText(""+value);
 		refresh();
 	}
 	

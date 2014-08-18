@@ -6,6 +6,7 @@ import java.util.Random;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.GridLayout;
 
 
@@ -74,7 +75,8 @@ public class GameLayout extends GridLayout {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-		cardWidth = (Math.max(w, h) - 10) / 4;
+		cardWidth = (Math.min(w, h) - 10) / 4;
+		initCardMap();
 		randomCard(cardMap);
 		refresh(cardMap, cardWidth, cardWidth);
 	}
@@ -103,6 +105,7 @@ public class GameLayout extends GridLayout {
 			}
 		}
 		Random rd = new Random();
+		Log.i("gamelayout", "ll.size() = "+ll.size());
 		int index =rd.nextInt(ll.size());
 		int x=ll.get(index)/4;
 		int y=ll.get(index) -4*x;
