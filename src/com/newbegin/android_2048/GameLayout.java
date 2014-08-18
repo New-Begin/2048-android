@@ -402,7 +402,7 @@ public class GameLayout extends GridLayout {
 			if (haveBlank == false) {
 				canMove[0] = false;
 				canMove[1] = false;
-				if (!vJudge()) {
+				if (!hJudge()) {
 					return false;
 				}
 				canMove[2] = canMove[3] = true;
@@ -476,7 +476,7 @@ public class GameLayout extends GridLayout {
 			if (haveBlank == false) {
 				canMove[1] = false;
 				canMove[0] = false;
-				if (!vJudge()) {
+				if (!hJudge()) {
 					return false;
 				}
 				canMove[2] = canMove[3] = true;
@@ -490,6 +490,7 @@ public class GameLayout extends GridLayout {
 
 	// 在没有空格的情况下判断垂直方向有没有相等的相邻数
 	boolean vJudge() {
+		Log.i("gameview", "vjudge");
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 3; j++) {
 				if (cardMap[j][i].isEqual(cardMap[j + 1][i])) {
@@ -502,6 +503,7 @@ public class GameLayout extends GridLayout {
 
 	// 在没有空格的情况下判断水平方向有没有相等的相邻数
 	boolean hJudge() {
+		Log.i("gameview", "hjudge");
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 3; j++) {
 				if (cardMap[i][j].isEqual(cardMap[i][j + 1])) {
