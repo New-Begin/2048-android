@@ -28,7 +28,7 @@ public class GameLayout extends GridLayout {
 	boolean canMove[] = { true, true, true, true };//记录当前是否进行了合并填充
 
 	// 分数
-	private int score;
+	private int score = 0;
 
 	// card的宽高
 	private int cardWidth;
@@ -77,12 +77,14 @@ public class GameLayout extends GridLayout {
 		super.onSizeChanged(w, h, oldw, oldh);
 		cardWidth = (Math.min(w, h) - 10) / 4;
 		initCardMap();
-		randomCard(cardMap);
+//		randomCard(cardMap);
 		refreshView();
 //		refresh(cardMap, cardWidth, cardWidth);
 	}
 
-	// 初始化cardMap
+	/**
+	 *  初始化cardMap
+	 */
 	public void initCardMap() {
 		Card c;
 		for (int i = 0; i < 4; i++) {
@@ -93,7 +95,11 @@ public class GameLayout extends GridLayout {
 		}
 	}
 	
-	//随机生成卡片
+	/**
+	 *  随机生成卡片
+	 * @param cards
+	 */
+	 
 	public void randomCard(Card[][] cards) {
 		LinkedList<Integer> ll = new LinkedList<Integer>();
 		for (int i = 0; i < 4; i++) {
@@ -113,21 +119,21 @@ public class GameLayout extends GridLayout {
 		int value;
 		//10分之1的概率生成4
 		if (rd.nextInt(10)==4) {
-			value = 4;
-		}else{
 			value = 2;
+		}else{
+			value = 1;
 		}
 		cards[x][y].setValue(value);
 	}
 
 	// 将Card[][]摆放到GridLayout中
-	public void refresh(Card[][] cards, int width, int height) {
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				addView(cards[i][j], width, height);
-			}
-		}
-	}
+//	public void refresh(Card[][] cards, int width, int height) {
+//		for (int i = 0; i < 4; i++) {
+//			for (int j = 0; j < 4; j++) {
+//				addView(cards[i][j], width, height);
+//			}
+//		}
+//	}
 
 	// /**
 	// * @Description: 卡片合并,填充
@@ -140,12 +146,13 @@ public class GameLayout extends GridLayout {
 
 	/**
 	 * 
-	 * @Description: 刷新页面
+	 * @Description: 刷新页面,并随机生成新的卡片
 	 * @param
 	 * @return void
 	 */
 	public void refreshView() {
 		removeAllViews();
+		randomCard(cardMap);
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				addView(cardMap[i][j], cardWidth, cardWidth);
@@ -158,6 +165,13 @@ public class GameLayout extends GridLayout {
 	 * @param
 	 * @return void
 	 */
+	
+//	// 左滑动合并填充函数
+//		boolean gameLeft() {
+//			randomCard(cardMap);
+//			return true;
+//		}
+	
 	// 左滑动合并填充函数
 	boolean gameLeft() {
 		if (!canMove[2])
