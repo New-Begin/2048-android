@@ -22,7 +22,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	private GameLayout gameView; //contain a double dimensional array gameView numArray;
 	
 	//保存上一步操作的堆栈
-	private HistoryStack historyRecord = new HistoryStack();//a stack that remains past gameView.numArray;
+	private HistoryStack historyRecord = new HistoryStack();//a stack that remains past gameView CardMap;
 	
 	//获取存储的历史最高分
 	private SharedPreferences gameHistory;
@@ -67,6 +67,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		gameView.setScore(0);
 		this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
 		this.correntScoreTV.setText("CurrentScore:" + 0);
+		historyRecord.clearStack();
 		//2.initialize data.  
 		gameView.initCardMap();
 		//3.refresh UI.
@@ -113,7 +114,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			break;
 		case MotionEvent.ACTION_UP:
 			//记录当前棋局
-			//historyRecord.push(gameView.getCardMap());
+			historyRecord.push(gameView.getCardMap());
 			
 			offsetX = event.getX() - X;
 			offsetY = event.getY() - Y;
