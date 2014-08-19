@@ -1,5 +1,7 @@
 package com.newbegin.android_2048;
 
+import java.util.Arrays;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,6 +10,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -22,9 +25,8 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 									// numArray;
 
 	// 保存上一步操作的堆栈
-	private HistoryStack historyRecord = new HistoryStack();// a stack that
-															// remains past
-															// gameView CardMap;
+	private HistoryStack historyRecord = new HistoryStack();
+	private int [] lastCardMapValue;
 
 	// 获取存储的历史最高分
 	private SharedPreferences gameHistory;
@@ -44,6 +46,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 
 	// 游戏结束提示框
 	private AlertDialog.Builder gameOverDialog;
+	private AlertDialog.Builder gameExitDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +124,9 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			Y = event.getY();
 			break;
 		case MotionEvent.ACTION_UP:
-			// 记录当前棋局
+			//保存当前棋局
+			if(!historyRecord.empty())
+				lastCardMapValue = historyRecord.peek();
 			historyRecord.push(gameView.getCardMapValue());
 
 			offsetX = event.getX() - X;
@@ -157,6 +162,11 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 				this.highScoreTV.setText("HighScore:"
 						+ Integer.toString(currentScore));
 			}
+			
+			if(Arrays.equals(gameView.getCardMapValue(), historyRecord.peek()))
+			{
+				historyRecord.push(lastCardMapValue);
+			}
 
 			if (!isContinue) {
 				// pop a dialog which prompts that game is over. modify the
@@ -179,9 +189,9 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		gameOverDialog = new AlertDialog.Builder(this);
 		gameOverDialog.setMessage("菜鸡，游戏到此结束！");
 		gameOverDialog.setTitle("Game Over！！");
-		gameOverDialog.setCancelable(false);
+		//gameOverDialog.setCancelable(false);
 		// 重新加载列表
-		gameOverDialog.setPositiveButton("我退了！", new OnClickListener() {
+		gameOverDialog.setPositiveButton("我怂退了！", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -191,7 +201,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			}
 		});
 		// 退出当前Activity
-		gameOverDialog.setNegativeButton("我不服！", new OnClickListener() {
+		gameOverDialog.setNegativeButton("不服再来！", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
@@ -201,5 +211,38 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		});
 		gameOverDialog.create().show();
 	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		 if (keyCode == KeyEvent.KEYCODE_BACK )  
+	        {  
+				gameExitDialog = new AlertDialog.Builder(this);
+				gameExitDialog.setMessage("菜鸡，你怂你跑啊！");
+				gameExitDialog.setTitle("退？！");
+				//gameOverDialog.setCancelable(false);
+				// 重新加载列表
+				gameExitDialog.setPositiveButton("我怂退了！", new OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+						GameManagerActivity.this.finish();
+					}
+				});
+				// 退出当前Activity
+				gameExitDialog.setNegativeButton("手滑点错！", new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+					}
+				});
+				gameExitDialog.create().show();
+	  
+	        }            
+	        return false;           
+	    }  
+
 
 }
