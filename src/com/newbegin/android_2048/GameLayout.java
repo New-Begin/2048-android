@@ -200,9 +200,10 @@ public class GameLayout extends GridLayout {
 		haveBlank = false;
 		merged = false;
 		moved = false;
-		int fir = 0, sec = 0;
+		int fir, sec;
 		// 合并
 		for (int i = 0; i < 4; i++) {
+			sec = 0;
 			fir = 0;
 			while (fir < 4) {
 				if (cardMap[i][fir].getValue() != 0) {
@@ -290,9 +291,10 @@ public class GameLayout extends GridLayout {
 		haveBlank = false;
 		merged = false;
 		moved = false;
-		int fir = 3, sec = 3;
+		int fir, sec;
 		// 合并
 		for (int i = 0; i < 4; i++) {
+			sec = 3;
 			fir = 3;
 			while (fir >= 0) {
 				if (cardMap[i][fir].getValue() != 0) {
@@ -378,9 +380,10 @@ public class GameLayout extends GridLayout {
 		haveBlank = false;
 		merged = false;
 		moved = false;
-		int fir = 0, sec = 0;
+		int fir, sec;
 		// 合并
 		for (int i = 0; i < 4; i++) {
+			sec = 0;
 			fir = 0;
 			while (fir < 4) {
 				if (cardMap[fir][i].getValue() != 0) {
@@ -467,9 +470,10 @@ public class GameLayout extends GridLayout {
 		haveBlank = false;
 		merged = false;
 		moved = false;
-		int fir = 3, sec = 3;
+		int fir, sec;
 		// 合并
 		for (int i = 0; i < 4; i++) {
+			sec = 3;
 			fir = 3;
 			while (fir >= 0) {
 				if (cardMap[fir][i].getValue() != 0) {
