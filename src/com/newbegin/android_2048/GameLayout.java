@@ -20,10 +20,10 @@ public class GameLayout extends GridLayout {
 	/* 存放一组卡片 */
 	private static Card[][] cardMap = new Card[4][4];
 
-	boolean haveBlank;// 记录填充时是否有空格
-	boolean merged;// 记录是否进行 合并
-	boolean moved;//记录是否进行了移动
-	boolean canMove[] = { true, true, true, true };// 记录当前是否进行了合并填充
+	private boolean haveBlank;// 记录填充时是否有空格
+	private boolean merged;// 记录是否进行 合并
+	private boolean moved;//记录是否进行了移动
+	public boolean canMove[] = { true, true, true, true };// 记录当前操作是否进行了合并填充up down left right
 
 	// 分数
 	private int score = 0;

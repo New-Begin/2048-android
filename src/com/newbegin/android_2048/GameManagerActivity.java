@@ -1,6 +1,5 @@
 package com.newbegin.android_2048;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,65 +16,69 @@ import android.view.View.OnTouchListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 public class GameManagerActivity extends Activity implements OnTouchListener {
-	
-	private GameLayout gameView; //contain a double dimensional array gameView numArray;
-	
-	//保存上一步操作的堆栈
-	private HistoryStack historyRecord = new HistoryStack();//a stack that remains past gameView CardMap;
-	
-	//获取存储的历史最高分
+
+	private GameLayout gameView; // contain a double dimensional array gameView
+									// numArray;
+
+	// 保存上一步操作的堆栈
+	private HistoryStack historyRecord = new HistoryStack();// a stack that
+															// remains past
+															// gameView CardMap;
+
+	// 获取存储的历史最高分
 	private SharedPreferences gameHistory;
 	private SharedPreferences.Editor historyEditor;
-	
-	private int currentScore;//record current score
+
+	private int currentScore;// record current score
 	private int highScore;
-	
-	//判断游戏是否结束
+
+	// 判断游戏是否结束
 	private boolean isContinue = true;
-	//onTouch事件的初始坐标和偏移量，用于判断移动方向
+	// onTouch事件的初始坐标和偏移量，用于判断移动方向
 	private float X, Y, offsetX, offsetY;
-	
-	//显示当前分数和最高分的组件
+
+	// 显示当前分数和最高分的组件
 	private TextView correntScoreTV;
 	private TextView highScoreTV;
 
-	//游戏结束提示框
+	// 游戏结束提示框
 	private AlertDialog.Builder gameOverDialog;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		gameView = (GameLayout)findViewById(R.id.gameView);
-		correntScoreTV = (TextView)findViewById(R.id.correntScore);
-		highScoreTV = (TextView)findViewById(R.id.highScore);
-		
+
+		gameView = (GameLayout) findViewById(R.id.gameView);
+		correntScoreTV = (TextView) findViewById(R.id.correntScore);
+		highScoreTV = (TextView) findViewById(R.id.highScore);
+
 		init();
-	}	
-	
+	}
+
 	/**
-	 * initialize the background double dimensional array, the foreground GameView
+	 * initialize the background double dimensional array, the foreground
+	 * GameView
 	 */
-	private void init()
-	{
-		//1.load the history high score;
-		gameHistory = this.getSharedPreferences("gameHistory",Context.MODE_PRIVATE);
+	private void init() {
+		// 1.load the history high score;
+		gameHistory = this.getSharedPreferences("gameHistory",
+				Context.MODE_PRIVATE);
 		historyEditor = gameHistory.edit();
-		highScore = gameHistory.getInt("highScore", 0);		
+		highScore = gameHistory.getInt("highScore", 0);
 		gameView.setScore(0);
 		this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
 		this.correntScoreTV.setText("CurrentScore:" + 0);
 		historyRecord.clearStack();
-//		2.initialize data.  
+		// 2.initialize data.
 		gameView.clearCardMap();
-//		3.refresh UI.
+		// 3.refresh UI.
 		gameView.randomCard();
 		gameView.refreshView();
 
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -95,34 +98,32 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			this.init();
 			break;
 		case R.id.undo:
-			if(!historyRecord.empty())
-			{
+			if (!historyRecord.empty()) {
 				gameView.setCardMapValue(historyRecord.pop());
 				gameView.refreshView();
-			}
-			else
-				Toast.makeText(getApplicationContext(), "菜鸡！只能回退一次！", Toast.LENGTH_LONG).show();
+			} else
+				Toast.makeText(getApplicationContext(), "菜鸡！只能回退一次！",
+						Toast.LENGTH_LONG).show();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
 
 	}
 
-	//每次滑动gameView回调执行的方法
-	//实现onTouch接口,zhty add
+	// 每次滑动gameView回调执行的方法
+	// 实现onTouch接口,zhty add
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		
-		
+
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			X = event.getX();
 			Y = event.getY();
 			break;
 		case MotionEvent.ACTION_UP:
-			//记录当前棋局
+			// 记录当前棋局
 			historyRecord.push(gameView.getCardMapValue());
-			
+
 			offsetX = event.getX() - X;
 			offsetY = event.getY() - Y;
 			// 先判断方向
@@ -144,43 +145,44 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 				}
 			}
 			System.out.println("onTouch-------->random");
-			gameView.randomCard();
-			//merge equal numbers			
+			if (gameView.canMove[0] && gameView.canMove[1]
+					&& gameView.canMove[2] && gameView.canMove[3])
+				gameView.randomCard();
+			// merge equal numbers
 			gameView.refreshView();
 			currentScore = gameView.getScore();
-			this.correntScoreTV.setText("CurrentScore:" + Integer.toString(currentScore));
-			if(currentScore > highScore)
-			{
-				this.highScoreTV.setText("HighScore:" + Integer.toString(currentScore));
+			this.correntScoreTV.setText("CurrentScore:"
+					+ Integer.toString(currentScore));
+			if (currentScore > highScore) {
+				this.highScoreTV.setText("HighScore:"
+						+ Integer.toString(currentScore));
 			}
-			
-			if(!isContinue)
-			 {
-			 //pop a dialog  which prompts that game is over. modify the highscore.
-			 if(currentScore > highScore)
-			 {
-				historyEditor.putInt("highScore",currentScore);
-			  	historyEditor.commit();
-			  	}
+
+			if (!isContinue) {
+				// pop a dialog which prompts that game is over. modify the
+				// highscore.
+				if (currentScore > highScore) {
+					historyEditor.putInt("highScore", currentScore);
+					historyEditor.commit();
+				}
 				showgameOverDialog();
-			  }	
+			}
 			break;
 		default:
 			break;
 		}
 		return true;
 	}
-	
-	/** 游戏结束提示框*/
-	private void showgameOverDialog()
-	{
+
+	/** 游戏结束提示框 */
+	private void showgameOverDialog() {
 		gameOverDialog = new AlertDialog.Builder(this);
 		gameOverDialog.setMessage("菜鸡，游戏到此结束！");
 		gameOverDialog.setTitle("Game Over！！");
 		gameOverDialog.setCancelable(false);
-		//重新加载列表
+		// 重新加载列表
 		gameOverDialog.setPositiveButton("我退了！", new OnClickListener() {
-			
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
@@ -188,7 +190,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 				GameManagerActivity.this.finish();
 			}
 		});
-		//退出当前Activity
+		// 退出当前Activity
 		gameOverDialog.setNegativeButton("我不服！", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -198,6 +200,6 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			}
 		});
 		gameOverDialog.create().show();
-	}	
+	}
 
 }
