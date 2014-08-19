@@ -117,7 +117,8 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	// 实现onTouch接口,zhty add
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-
+		//判断是否移动
+		boolean isMove = false;
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			X = event.getX();
@@ -136,46 +137,53 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 				if (offsetX > 5) {
 					Log.i("gameview", "right");
 					isContinue = gameView.gameRight();
+					isMove = true;
 				} else if (offsetX < -5) {
 					Log.i("gameview", "left");
 					isContinue = gameView.gameLeft();
+					isMove = true;
 				}
 			} else if (Math.abs(offsetX) < Math.abs(offsetY)) {
 				if (offsetY > 5) {
 					Log.i("gameview", "down");
 					isContinue = gameView.gameDown();
+					isMove = true;
 				} else if (offsetY < -5) {
 					Log.i("gameview", "up");
 					isContinue = gameView.gameUp();
+					isMove = true;
 				}
 			}
 			System.out.println("onTouch-------->random");
-			if (gameView.canMove[0] && gameView.canMove[1]
-					&& gameView.canMove[2] && gameView.canMove[3])
-				gameView.randomCard();
-			// merge equal numbers
-			gameView.refreshView();
-			currentScore = gameView.getScore();
-			this.correntScoreTV.setText("CurrentScore:"
-					+ Integer.toString(currentScore));
-			if (currentScore > highScore) {
-				this.highScoreTV.setText("HighScore:"
-						+ Integer.toString(currentScore));
-			}
-			
-			if(Arrays.equals(gameView.getCardMapValue(), historyRecord.peek()))
+			if(isMove)
 			{
-				historyRecord.push(lastCardMapValue);
-			}
-
-			if (!isContinue) {
-				// pop a dialog which prompts that game is over. modify the
-				// highscore.
+				if (gameView.canMove[0] && gameView.canMove[1]
+						&& gameView.canMove[2] && gameView.canMove[3])
+					gameView.randomCard();
+				// merge equal numbers
+				gameView.refreshView();
+				currentScore = gameView.getScore();
+				this.correntScoreTV.setText("CurrentScore:"
+						+ Integer.toString(currentScore));
 				if (currentScore > highScore) {
-					historyEditor.putInt("highScore", currentScore);
-					historyEditor.commit();
+					this.highScoreTV.setText("HighScore:"
+							+ Integer.toString(currentScore));
 				}
-				showgameOverDialog();
+				
+				if(Arrays.equals(gameView.getCardMapValue(), historyRecord.peek()))
+				{
+					historyRecord.push(lastCardMapValue);
+				}
+
+				if (!isContinue) {
+					// pop a dialog which prompts that game is over. modify the
+					// highscore.
+					if (currentScore > highScore) {
+						historyEditor.putInt("highScore", currentScore);
+						historyEditor.commit();
+					}
+					showgameOverDialog();
+				}
 			}
 			break;
 		default:
