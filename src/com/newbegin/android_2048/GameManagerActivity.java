@@ -1,13 +1,22 @@
 package com.newbegin.android_2048;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,7 +35,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 
 	// 保存上一步操作的堆栈
 	private HistoryStack historyRecord = new HistoryStack();
-	private int [] lastCardMapValue;
+	private int[] lastCardMapValue;
 
 	// 获取存储的历史最高分
 	private SharedPreferences gameHistory;
@@ -97,7 +106,6 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		int id = item.getItemId();
 		switch (id) {
 		case R.id.restart:
-
 			this.init();
 			break;
 		case R.id.undo:
@@ -108,6 +116,9 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 				Toast.makeText(getApplicationContext(), "菜鸡！只能回退一次！",
 						Toast.LENGTH_LONG).show();
 			break;
+		case R.id.share:
+			share();
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 
@@ -117,7 +128,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	// 实现onTouch接口,zhty add
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		//判断是否移动
+		// 判断是否移动
 		boolean isMove = false;
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
@@ -125,8 +136,8 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			Y = event.getY();
 			break;
 		case MotionEvent.ACTION_UP:
-			//保存当前棋局
-			if(!historyRecord.empty())
+			// 保存当前棋局
+			if (!historyRecord.empty())
 				lastCardMapValue = historyRecord.peek();
 			historyRecord.push(gameView.getCardMapValue());
 
@@ -155,8 +166,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 				}
 			}
 			System.out.println("onTouch-------->random");
-			if(isMove)
-			{
+			if (isMove) {
 				if (gameView.canMove[0] && gameView.canMove[1]
 						&& gameView.canMove[2] && gameView.canMove[3])
 					gameView.randomCard();
@@ -169,9 +179,9 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 					this.highScoreTV.setText("HighScore:"
 							+ Integer.toString(currentScore));
 				}
-				
-				if(Arrays.equals(gameView.getCardMapValue(), historyRecord.peek()))
-				{
+
+				if (Arrays.equals(gameView.getCardMapValue(),
+						historyRecord.peek())) {
 					historyRecord.push(lastCardMapValue);
 				}
 
@@ -197,7 +207,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		gameOverDialog = new AlertDialog.Builder(this);
 		gameOverDialog.setMessage("菜鸡，游戏到此结束！");
 		gameOverDialog.setTitle("Game Over！！");
-		//gameOverDialog.setCancelable(false);
+		// gameOverDialog.setCancelable(false);
 		// 重新加载列表
 		gameOverDialog.setPositiveButton("我怂退了！", new OnClickListener() {
 
@@ -222,35 +232,74 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		 if (keyCode == KeyEvent.KEYCODE_BACK )  
-	        {  
-				gameExitDialog = new AlertDialog.Builder(this);
-				gameExitDialog.setMessage("菜鸡，你怂你跑啊！");
-				gameExitDialog.setTitle("退？！");
-				//gameOverDialog.setCancelable(false);
-				// 重新加载列表
-				gameExitDialog.setPositiveButton("我怂退了！", new OnClickListener() {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			gameExitDialog = new AlertDialog.Builder(this);
+			gameExitDialog.setMessage("菜鸡，你怂你跑啊！");
+			gameExitDialog.setTitle("退？！");
+			// gameOverDialog.setCancelable(false);
+			// 重新加载列表
+			gameExitDialog.setPositiveButton("我怂退了！", new OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-						dialog.dismiss();
-						GameManagerActivity.this.finish();
-					}
-				});
-				// 退出当前Activity
-				gameExitDialog.setNegativeButton("手滑点错！", new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-						dialog.dismiss();
-					}
-				});
-				gameExitDialog.create().show();
-	  
-	        }            
-	        return false;           
-	    }  
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+					GameManagerActivity.this.finish();
+				}
+			});
+			// 退出当前Activity
+			gameExitDialog.setNegativeButton("手滑点错！", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			});
+			gameExitDialog.create().show();
 
+		}
+		return false;
+	}
 
+	/**
+	 * 分享分数，使用Intent分享，没有调用WeiXin API之类的接口
+	 */
+	public void share() {
+		// 分享的Intent
+		Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:"));
+		// 分享的类型为纯文本
+		intent.setType("text/plain");
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		intent.putExtra(Intent.EXTRA_SUBJECT, "subject");
+		intent.putExtra(Intent.EXTRA_TEXT, "我在超级2048中得了"+gameView.getScore()+"分，你行你也来啊https://github.com/New-Begin/2048-android");
+		// 本地图片缓存
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss",
+//				Locale.US);
+//		String fname = "/sdcard/" + sdf.format(new Date()) + ".png";
+//		View view = gameView.getRootView();
+//		view.setDrawingCacheEnabled(true);
+//		view.buildDrawingCache();
+//		Bitmap bitmap = view.getDrawingCache();
+//		if (bitmap != null) {
+//			System.out.println("bitmap got!");
+//			try {
+//				FileOutputStream out = new FileOutputStream(fname);
+//				bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+//				System.out.println("file" + fname + "output done.");
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		} else {
+//			System.out.println("bitmap is NULL!");
+//		}
+//		
+//		intent.putExtra(Intent.EXTRA_STREAM,
+//				Uri.fromFile(new File(fname)));
+		try {
+			// 跳转到处理分享Intent的Activity
+			startActivity(intent);
+		} catch (ActivityNotFoundException anfe) {
+			Log.w("zhtyshare", anfe.toString());
+		}
+	}
 }
