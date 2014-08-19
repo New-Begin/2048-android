@@ -11,18 +11,22 @@
         android:id="@+id/correntScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="30px"
         android:text="@string/correntScore" />
  
     <TextView
         android:id="@+id/highScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="30px"
         android:text="@string/highScore" />
+    
     
     <com.newbegin.android_2048.GameLayout
         android:id="@+id/gameView"  
-	    android:layout_width="fill_parent"   
-	    android:layout_height="fill_parent"  
+	    android:layout_width="fill_parent" 
+	    android:layout_height="fill_parent"
+	    android:paddingTop="220px"  
 	    android:columnCount='4' 
 	     />
 
