@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">android_2048</string>
+    <string name="app_name">2048</string>
     <string name="restart">Restart</string>
     <string name="undo">Undo</string>
     <string name="correntScore">CurrentScore:0</string>
     <string name="highScore">HighScore:</string>
+    <string name="share">Share</string>
 
 
 </resources>
