@@ -1,12 +1,7 @@
 package com.newbegin.android_2048;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
 
+import java.util.Arrays;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -15,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -128,7 +122,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	// 实现onTouch接口,zhty add
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		// 判断是否移动
+		// 判断手指是否在屏幕上滑动
 		boolean isMove = false;
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
@@ -184,14 +178,14 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 						historyRecord.peek())) {
 					historyRecord.push(lastCardMapValue);
 				}
-
-				if (!isContinue) {
-					// pop a dialog which prompts that game is over. modify the
-					// highscore.
-					if (currentScore > highScore) {
+				//保存历史最高分到本地
+				if (currentScore > highScore) {
 						historyEditor.putInt("highScore", currentScore);
 						historyEditor.commit();
 					}
+				
+				//游戏结束，弹出提示框
+				if (!isContinue) {
 					showgameOverDialog();
 				}
 			}
@@ -230,6 +224,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		gameOverDialog.create().show();
 	}
 
+	//点击返回按钮时调用。
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -301,5 +296,10 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		} catch (ActivityNotFoundException anfe) {
 			Log.w("zhtyshare", anfe.toString());
 		}
+	}
+	//保存当前棋局,下次开启游戏会载入此棋局
+	private void save()
+	{
+		
 	}
 }
