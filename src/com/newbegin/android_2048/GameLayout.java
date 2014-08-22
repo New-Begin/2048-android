@@ -259,6 +259,7 @@ public class GameLayout extends GridLayout {
 				canMove[2] = false;
 				if(haveBlank == false){
 					if (!vJudge()) {
+						canMove[0] = canMove[1] = canMove[3] = false;
 						return false;
 					}
 					else{
@@ -348,6 +349,7 @@ public class GameLayout extends GridLayout {
 				canMove[3] = false;
 				if(haveBlank == false){
 					if (!vJudge()) {
+						canMove[0] = canMove[1] = canMove[2] = false;
 						return false;
 					}
 					else{
@@ -438,6 +440,7 @@ public class GameLayout extends GridLayout {
 				canMove[0] = false;
 				if(haveBlank == false){
 					if (!hJudge()) {
+						canMove[2] = canMove[1] = canMove[3] = false;
 						return false;
 					}
 					else{
@@ -528,6 +531,7 @@ public class GameLayout extends GridLayout {
 				canMove[1] = false;
 				if(haveBlank == false){
 					if (!hJudge()) {
+						canMove[2] = canMove[0] = canMove[3] = false;
 						return false;
 					}
 					else{
