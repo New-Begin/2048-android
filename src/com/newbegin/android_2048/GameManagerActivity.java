@@ -2,6 +2,7 @@ package com.newbegin.android_2048;
 
 
 import java.util.Arrays;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -50,6 +51,9 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	// 游戏结束提示框
 	private AlertDialog.Builder gameOverDialog;
 	private AlertDialog.Builder gameExitDialog;
+	
+	//判断是否保存棋局退出,默认值为true,异常退出保存棋局
+	private boolean isSaving = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,15 +76,29 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		gameHistory = this.getSharedPreferences("gameHistory",
 				Context.MODE_PRIVATE);
 		historyEditor = gameHistory.edit();
-		highScore = gameHistory.getInt("highScore", 0);
-		gameView.setScore(0);
-		this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
-		this.correntScoreTV.setText("CurrentScore:" + 0);
-		historyRecord.clearStack();
-		// 2.initialize data.
-		gameView.clearCardMap();
-		// 3.refresh UI.
-		gameView.randomCard();
+		//加载上次退出时棋局
+		if(gameHistory.getBoolean("isSaved", false))
+		{
+			highScore = gameHistory.getInt("highScore", 0);
+			this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
+			this.correntScoreTV.setText("CurrentScore:" + gameHistory.getInt("SavedScore", 0));
+			gameView.setCardMapValue(this.reloadCardMapValue());
+			//已经读取保存数据
+			historyEditor.putBoolean("isSaved", false).commit();
+		}
+		else
+		{
+			highScore = gameHistory.getInt("highScore", 0);
+			gameView.setScore(0);
+			this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
+			this.correntScoreTV.setText("CurrentScore:" + 0);
+			historyRecord.clearStack();
+			// 2.initialize data.
+			gameView.clearCardMap();
+			// 3.refresh UI.
+			gameView.randomCard();
+			gameView.randomCard();
+		}
 		gameView.refreshView();
 
 	}
@@ -183,9 +201,10 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 						historyEditor.putInt("highScore", currentScore);
 						historyEditor.commit();
 					}
-				
+				System.out.println("------isContinue---"+ isContinue);
 				//游戏结束，弹出提示框
 				if (!isContinue) {
+					System.out.println("---showGameOverDialog----");
 					showgameOverDialog();
 				}
 			}
@@ -202,23 +221,38 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		gameOverDialog.setMessage("菜鸡，游戏到此结束！");
 		gameOverDialog.setTitle("Game Over！！");
 		// gameOverDialog.setCancelable(false);
-		// 重新加载列表
-		gameOverDialog.setPositiveButton("我怂退了！", new OnClickListener() {
+		// 回退一步
+		gameOverDialog.setPositiveButton("我怂退了!", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
 				GameManagerActivity.this.finish();
-			}
+				}				
+		
 		});
-		// 退出当前Activity
-		gameOverDialog.setNegativeButton("不服再来！", new OnClickListener() {
+		//重新开始
+		gameOverDialog.setNeutralButton("不服再来！",new OnClickListener() {
+			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
-				GameManagerActivity.this.init();
+				GameManagerActivity.this.init();			
+			}
+		} );
+		// 退出游戏
+		gameOverDialog.setNegativeButton("我点错了！", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+				if (!historyRecord.empty()) {
+					gameView.setCardMapValue(historyRecord.pop());
+					gameView.refreshView();
+				}
+				
 			}
 		});
 		gameOverDialog.create().show();
@@ -232,17 +266,30 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			gameExitDialog.setMessage("菜鸡，你怂你跑啊！");
 			gameExitDialog.setTitle("退？！");
 			// gameOverDialog.setCancelable(false);
-			// 重新加载列表
-			gameExitDialog.setPositiveButton("我怂退了！", new OnClickListener() {
-
+			// 返回游戏
+			gameExitDialog.setPositiveButton("我菜我退！", new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
 					dialog.dismiss();
+					//正常退出且不保存棋盘
+					isSaving = false;
+					GameManagerActivity.this.finish();
+				}		
+			});
+			gameExitDialog.setNeutralButton("下次接着干！", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+					//正常退出且保存棋盘
+					isSaving = true;
+					//finish调用onStop
 					GameManagerActivity.this.finish();
 				}
 			});
-			// 退出当前Activity
+			//退出游戏
 			gameExitDialog.setNegativeButton("手滑点错！", new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -297,9 +344,47 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			Log.w("zhtyshare", anfe.toString());
 		}
 	}
-	//保存当前棋局,下次开启游戏会载入此棋局
-	private void save()
+	
+	//Home键退出保存当前棋局
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		if(isSaving)
+		{
+			this.uploadCardMapValue(gameView.getCardMapValue());
+		}	
+	}
+
+	/**
+	 * 把棋盘数据保存到SharedPreference
+	 * @param cardMapValue  要保存的数组
+	 * @return 是否保存成功
+	 */
+	private boolean uploadCardMapValue(int[]cardMapValue)
 	{
-		
+		historyEditor.putInt("SavedScore", gameView.getScore());
+		for(int i = 0; i < 16; i++)
+		{
+			historyEditor.putInt("CardValue" + i,cardMapValue[i] );
+			//System.out.println("cardValue------->" + cardMapValue[i]);
+		}
+		boolean isUploaded = historyEditor.commit();
+		historyEditor.putBoolean("isSaved", isUploaded).commit();
+		return isUploaded;
+	}
+	
+	/**
+	 * 从Sharedpreference读取保存的棋盘数据
+	 * @return 读取的数组信息
+	 */
+	private int[] reloadCardMapValue()
+	{
+		int [] cardMapValue = new int[16];
+		for(int i = 0; i < 16; i ++)
+		{
+			cardMapValue[i] =  gameHistory.getInt("CardValue" + i, 0);
+		}
+		return cardMapValue;
 	}
 }
