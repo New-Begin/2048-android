@@ -10,10 +10,10 @@ public class Card extends FrameLayout {
 
 	private int value;
 	//°Ù·Ö±È£¬R£¬G£¬B
-	private int[] color = { 0x08ff0000, 0x10ff0000, 0x20ff0000, 0x30ff0000,
-			0x40ff0000, 0x50ff0000, 0x60ff0000, 0x70ff0000, 0x80ff0000,
-			0x90ff0000, 0xa0ff0000, 0xb0ff0000, 0xc0ff0000, 0xd0ff0000,
-			0xe0ff0000, 0xf0ff0000 };
+	private int[] color = { 0xffEEE8AA, 0xffF5DEB3, 0x90FFA500, 0xffF4A460,
+			0xffFF7F24, 0xffFF4040, 0xffEE0000, 0xffEEC900, 0xffEEAD0E,
+			0xffEE9A00, 0xffEE3B3B, 0xffEE2C2C, 0xffEEC900, 0xffEEEE00,
+			0xffEEEE00, 0xffEEEE00 };
 	private TextView label = new TextView(getContext());
 
 	public Card(Context context) {
