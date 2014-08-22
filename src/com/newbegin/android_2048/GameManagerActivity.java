@@ -220,7 +220,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		gameOverDialog = new AlertDialog.Builder(this);
 		gameOverDialog.setMessage("²Ë¼¦£¬ÓÎÏ·µ½´Ë½áÊø£¡");
 		gameOverDialog.setTitle("Game Over£¡£¡");
-		// gameOverDialog.setCancelable(false);
+		gameOverDialog.setCancelable(false);
 		// »ØÍËÒ»²½
 		gameOverDialog.setPositiveButton("ÎÒËËÍËÁË!", new OnClickListener() {
 
@@ -228,6 +228,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
+				isSaving = false;
 				GameManagerActivity.this.finish();
 				}				
 		
@@ -263,6 +264,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			gameExitDialog = new AlertDialog.Builder(this);
+			gameExitDialog.setCancelable(false);
 			gameExitDialog.setMessage("²Ë¼¦£¬ÄãËËÄãÅÜ°¡£¡");
 			gameExitDialog.setTitle("ÍË£¿£¡");
 			// gameOverDialog.setCancelable(false);
