@@ -28,9 +28,11 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	private GameLayout gameView; // contain a double dimensional array gameView
 									// numArray;
 
-	// 保存上一步操作的堆栈
+	// 保存上一步操作的堆栈,目前实现回退一步，留下可扩展接口
 	private HistoryStack historyRecord = new HistoryStack();
 	private int[] lastCardMapValue;
+	private boolean[] lastCanMove;
+	private boolean[] tempCanMove;
 
 	// 获取存储的历史最高分
 	private SharedPreferences gameHistory;
@@ -83,6 +85,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
 			this.correntScoreTV.setText("CurrentScore:" + gameHistory.getInt("SavedScore", 0));
 			gameView.setCardMapValue(this.reloadCardMapValue());
+			gameView.setCanMove(this.reloadCanMove());
 			//已经读取保存数据
 			historyEditor.putBoolean("isSaved", false).commit();
 		}
@@ -92,6 +95,8 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			gameView.setScore(0);
 			this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
 			this.correntScoreTV.setText("CurrentScore:" + 0);
+			gameView.setCanMove(new boolean[]{true,true,true,true});
+			tempCanMove = lastCanMove = gameView.getCanMove();
 			historyRecord.clearStack();
 			// 2.initialize data.
 			gameView.clearCardMap();
@@ -123,7 +128,12 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		case R.id.undo:
 			if (!historyRecord.empty()) {
 				gameView.setCardMapValue(historyRecord.pop());
+				gameView.setCanMove(lastCanMove);
 				gameView.refreshView();
+				for(int i = 0; i < 4; i++)
+				{
+					System.out.println("undocanMove---->" + gameView.canMove[i]);
+				}
 			} else
 				Toast.makeText(getApplicationContext(), "菜鸡！只能回退一次！",
 						Toast.LENGTH_LONG).show();
@@ -152,7 +162,13 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			if (!historyRecord.empty())
 				lastCardMapValue = historyRecord.peek();
 			historyRecord.push(gameView.getCardMapValue());
-
+			tempCanMove = gameView.getCanMove();
+			
+			for(int i = 0; i < 4; i++)
+			{
+				System.out.println("LastcanMove---->" + gameView.canMove[i]);
+			}
+			
 			offsetX = event.getX() - X;
 			offsetY = event.getY() - Y;
 			// 先判断方向
@@ -177,6 +193,10 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 					isMove = true;
 				}
 			}
+			for(int i = 0; i < 4; i++)
+			{
+				System.out.println("CurrentcanMove---->" + gameView.canMove[i]);
+			}
 			System.out.println("onTouch-------->random");
 			if (isMove) {
 				if (gameView.canMove[0] && gameView.canMove[1]
@@ -196,6 +216,8 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 						historyRecord.peek())) {
 					historyRecord.push(lastCardMapValue);
 				}
+				else
+					lastCanMove = tempCanMove;
 				//保存历史最高分到本地
 				if (currentScore > highScore) {
 						historyEditor.putInt("highScore", currentScore);
@@ -354,7 +376,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		super.onStop();
 		if(isSaving)
 		{
-			this.uploadCardMapValue(gameView.getCardMapValue());
+			this.uploadCardMapValue(gameView.getCardMapValue(),gameView.canMove);
 		}	
 	}
 
@@ -363,7 +385,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 	 * @param cardMapValue  要保存的数组
 	 * @return 是否保存成功
 	 */
-	private boolean uploadCardMapValue(int[]cardMapValue)
+	private boolean uploadCardMapValue(int[]cardMapValue, boolean[]canMove)
 	{
 		historyEditor.putInt("SavedScore", gameView.getScore());
 		for(int i = 0; i < 16; i++)
@@ -371,13 +393,17 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			historyEditor.putInt("CardValue" + i,cardMapValue[i] );
 			//System.out.println("cardValue------->" + cardMapValue[i]);
 		}
+		for(int i = 0; i < 4; i++)
+		{
+			historyEditor.putBoolean("CanMove" + i,canMove[i]);
+		}
 		boolean isUploaded = historyEditor.commit();
 		historyEditor.putBoolean("isSaved", isUploaded).commit();
 		return isUploaded;
 	}
 	
 	/**
-	 * 从Sharedpreference读取保存的棋盘数据
+	 * 从Sharedpreference读取保存的棋盘卡片值
 	 * @return 读取的数组信息
 	 */
 	private int[] reloadCardMapValue()
@@ -388,5 +414,18 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			cardMapValue[i] =  gameHistory.getInt("CardValue" + i, 0);
 		}
 		return cardMapValue;
+	}
+	/**
+	 * 从Sharedpreference读取保存的移动信息
+	 * @return 
+	 */
+	private boolean[] reloadCanMove()
+	{
+		boolean [] canMove = new boolean[4];
+		for(int i = 0; i < 4; i ++)
+		{
+			canMove[i] =  gameHistory.getBoolean("CanMove" + i, true);
+		}
+		return canMove;
 	}
 }

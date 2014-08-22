@@ -81,6 +81,25 @@ public class GameLayout extends GridLayout {
 	public int getScore() {
 		return score;
 	}
+	/**
+	 * 
+	 * @return 获取canMove数组值
+	 */
+	public boolean[] getCanMove() {
+		boolean [] result = new boolean[4];
+		for(int i = 0; i < 4 ; i++)
+		{
+			result[i] = canMove[i];
+		} 
+		return result;
+	}
+
+	public void setCanMove(boolean[] canMove) {
+		for(int i = 0; i < 4; i++)
+		{
+			this.canMove[i] = canMove[i];
+		}	
+	}
 
 	/**
 	 * @Description: 初始化布局,设置滑动监听
