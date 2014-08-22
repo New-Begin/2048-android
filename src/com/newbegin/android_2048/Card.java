@@ -35,8 +35,11 @@ public class Card extends FrameLayout {
 		label.setTextSize(32);
 		label.setBackgroundColor(color[value]);
 		label.setGravity(Gravity.CENTER);
+		
 		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		//margin 设置子控件与父控件的距离  
+		//Padding  设置同类控件自己的距离
 		lp.setMargins(5, 5, 5, 5);
 		addView(label, lp);
 
