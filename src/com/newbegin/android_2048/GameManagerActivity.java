@@ -83,7 +83,9 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 		{
 			highScore = gameHistory.getInt("highScore", 0);
 			this.highScoreTV.setText("HighScore:" + Integer.toString(highScore));
-			this.correntScoreTV.setText("CurrentScore:" + gameHistory.getInt("SavedScore", 0));
+			int savedScore = gameHistory.getInt("SavedScore", 0);
+			this.correntScoreTV.setText("CurrentScore:" + savedScore);
+			gameView.setScore(savedScore);
 			gameView.setCardMapValue(this.reloadCardMapValue());
 			gameView.setCanMove(this.reloadCanMove());
 			//已经读取保存数据
