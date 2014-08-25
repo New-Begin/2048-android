@@ -128,7 +128,7 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			this.init();
 			break;
 		case R.id.undo:
-			if (!historyRecord.empty()) {
+		if (!historyRecord.empty()) {
 				gameView.setCardMapValue(historyRecord.pop());
 				gameView.setCanMove(lastCanMove);
 				gameView.refreshView();
@@ -268,13 +268,14 @@ public class GameManagerActivity extends Activity implements OnTouchListener {
 			}
 		} );
 		// 退出游戏
-		gameOverDialog.setNegativeButton("我点错了！", new OnClickListener() {
+		gameOverDialog.setNegativeButton("我移错了！", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
 				if (!historyRecord.empty()) {
 					gameView.setCardMapValue(historyRecord.pop());
+					gameView.setCanMove(lastCanMove);
 					gameView.refreshView();
 				}
 				
